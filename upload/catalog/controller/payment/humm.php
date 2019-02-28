@@ -1,6 +1,6 @@
 <?php
 
-class ControllerExtensionPaymentHumm extends Controller {
+class ControllerPaymentHumm extends Controller {
     const IS_DEBUG = false;
 
     /**
@@ -11,8 +11,8 @@ class ControllerExtensionPaymentHumm extends Controller {
     public function __construct( $registry ) {
         parent::__construct( $registry );
 
-        $this->load->language( 'extension/payment/humm' );
-        $this->load->model( 'extension/payment/humm' );
+        $this->load->language( 'payment/humm' );
+        $this->load->model( 'payment/humm' );
         $this->load->model( 'checkout/order' );
     }
 
@@ -25,14 +25,19 @@ class ControllerExtensionPaymentHumm extends Controller {
 
             $data['text_loading'] = $this->language->get( 'text_loading' );
 
-            $data['params'] = $this->model_extension_payment_humm->getParams();
+            $data['params'] = $this->model_payment_humm->getParams();
 
-            $data['action'] = $this->model_extension_payment_humm->getGatewayUrl();
+            $data['action'] = $this->model_payment_humm->getGatewayUrl();
         } else {
             $data['error'] = sprintf( $this->language->get( 'error_amount' ), $this->currency->format( 20, $this->session->data['currency'], 1 ) );
         }
+        if ( version_compare( VERSION, '2.2.0.0', '>=' ) ) {
+            $tpl_path = 'payment/humm';
+        } else {
+            $tpl_path = $this->config->get( 'config_template' ) . '/template/' . 'payment/humm' . '.tpl';
+        }
 
-        return $this->load->view( 'extension/payment/humm', $data );
+        return $this->load->view( $tpl_path, $data );
     }
 
     /**
@@ -142,9 +147,8 @@ class ControllerExtensionPaymentHumm extends Controller {
             'x_result',
         ];
 
-        // Required
-        // if an item exists(and is not empty) in $request, remove it from the $required array
-        // $required should be empty by the end to indicate all required items have been provided.
+        // if an item exists(and is not empty) in $request, remove it from the $required array 
+        // $required should be empty by the end to indicate all required items have been provided. 
         foreach ( $required as $seq => $value ) {
             if ( isset( $request[ $value ] ) && ! empty( $request[ $value ] ) ) {
                 unset( $required[ $seq ] );
@@ -156,7 +160,7 @@ class ControllerExtensionPaymentHumm extends Controller {
         }
 
         // Validate Signature
-        if ( ! $this->model_extension_payment_humm->validateSignature( $request ) ) {
+        if ( ! $this->model_payment_humm->validateSignature( $request ) ) {
             throw new \Exception( 'Bad Request. Unable to validate signature.' );
         }
 
@@ -174,7 +178,7 @@ class ControllerExtensionPaymentHumm extends Controller {
      * @param mixed[] $request
      */
     private function updateOrder( $order_info, $request ) {
-        $order_status_id = $this->model_extension_payment_humm->getStatus( $request['x_result'] );
+        $order_status_id = $this->model_payment_humm->getStatus( $request['x_result'] );
 
         if ( $order_status_id == $order_info['order_status_id'] ) {
             return;
@@ -200,7 +204,7 @@ class ControllerExtensionPaymentHumm extends Controller {
     private function debugLogIncoming( $type ) {
         if ( static::IS_DEBUG ) {
             $str = var_export( [
-                'get' => $_GET,
+                'get'  => $_GET,
                 'post' => $_POST,
             ], true );
 

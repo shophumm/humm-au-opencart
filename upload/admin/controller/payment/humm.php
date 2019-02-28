@@ -1,13 +1,13 @@
 <?php
 
-class ControllerExtensionPaymentHumm extends Controller {
+class ControllerPaymentHumm extends Controller {
     private $error = [];
 
     /**
      * @return string
      */
     public function index() {
-        $language_data = $this->load->language( 'extension/payment/humm' );
+        $language_data = $this->load->language( 'payment/humm' );
 
         $this->document->setTitle( $this->language->get( 'heading_title' ) );
 
@@ -18,7 +18,7 @@ class ControllerExtensionPaymentHumm extends Controller {
 
             $this->session->data['success'] = $this->language->get( 'text_success' );
 
-            $this->response->redirect( $this->url->link( 'extension/extension', 'token=' . $this->session->data['token'] . '&type=payment', true ) );
+            $this->response->redirect( $this->url->link( 'extension/payment', 'token=' . $this->session->data['token'] . '&type=payment', true ) );
         }
 
         // Error Strings
@@ -52,17 +52,17 @@ class ControllerExtensionPaymentHumm extends Controller {
             ],
             [
                 'text' => $this->language->get( 'text_extension' ),
-                'href' => $this->url->link( 'extension/extension', 'token=' . $this->session->data['token'] . '&type=payment', true ),
+                'href' => $this->url->link( 'extension/payment', 'token=' . $this->session->data['token'] . '&type=payment', true ),
             ],
             [
                 'text' => $this->language->get( 'heading_title' ),
-                'href' => $this->url->link( 'extension/payment/humm', 'token=' . $this->session->data['token'], true ),
+                'href' => $this->url->link( 'payment/humm', 'token=' . $this->session->data['token'], true ),
             ],
         ];
 
         // Actions / Links
-        $data['action'] = $this->url->link( 'extension/payment/humm', 'token=' . $this->session->data['token'], true );
-        $data['cancel'] = $this->url->link( 'extension/extension', 'token=' . $this->session->data['token'] . '&type=payment', true );
+        $data['action'] = $this->url->link( 'payment/humm', 'token=' . $this->session->data['token'], true );
+        $data['cancel'] = $this->url->link( 'extension/payment', 'token=' . $this->session->data['token'] . '&type=payment', true );
 
         // Dropdown Data
         $this->load->model( 'localisation/geo_zone' );
@@ -115,14 +115,19 @@ class ControllerExtensionPaymentHumm extends Controller {
         $data['footer']      = $this->load->controller( 'common/footer' );
 
         // Render Output
-        $this->response->setOutput( $this->load->view( 'extension/payment/humm', $data ) );
+        if ( version_compare( VERSION, '2.2.0.0', '>=' ) ) {
+            $tpl_path = 'payment/humm';
+        } else {
+            $tpl_path = 'payment/humm' . '.tpl';
+        }
+        $this->response->setOutput( $this->load->view( $tpl_path, $data ) );
     }
 
     /**
      * @return bool
      */
     protected function validate() {
-        if ( ! $this->user->hasPermission( 'modify', 'extension/payment/humm' ) ) {
+        if ( ! $this->user->hasPermission( 'modify', 'extension/payment' ) ) { // QUESTION: "payment/humm" and "extension/payment" both works here
             $this->error['humm_warning'] = $this->language->get( 'error_permission' );
         }
 
