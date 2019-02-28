@@ -14,11 +14,11 @@ class ControllerExtensionPaymentHumm extends Controller {
         $this->load->model( 'setting/setting' );
 
         if ( ( $this->request->server['REQUEST_METHOD'] == 'POST' ) && $this->validate() ) {
-            $this->model_setting_setting->editSetting( 'payment_humm', $this->request->post );
+            $this->model_setting_setting->editSetting( 'humm', $this->request->post );
 
             $this->session->data['success'] = $this->language->get( 'text_success' );
 
-            $this->response->redirect( $this->url->link( 'marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true ) );
+            $this->response->redirect( $this->url->link( 'extension/extension', 'token=' . $this->session->data['token'] . '&type=payment', true ) );
         }
 
         // Error Strings
@@ -48,21 +48,21 @@ class ControllerExtensionPaymentHumm extends Controller {
         $data['breadcrumbs'] = [
             [
                 'text' => $this->language->get( 'text_home' ),
-                'href' => $this->url->link( 'common/dashboard', 'user_token=' . $this->session->data['user_token'], true ),
+                'href' => $this->url->link( 'common/dashboard', 'token=' . $this->session->data['token'], true ),
             ],
             [
                 'text' => $this->language->get( 'text_extension' ),
-                'href' => $this->url->link( 'marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true ),
+                'href' => $this->url->link( 'extension/extension', 'token=' . $this->session->data['token'] . '&type=payment', true ),
             ],
             [
                 'text' => $this->language->get( 'heading_title' ),
-                'href' => $this->url->link( 'extension/payment/humm', 'user_token=' . $this->session->data['user_token'], true ),
+                'href' => $this->url->link( 'extension/payment/humm', 'token=' . $this->session->data['token'], true ),
             ],
         ];
 
         // Actions / Links
-        $data['action'] = $this->url->link( 'extension/payment/humm', 'user_token=' . $this->session->data['user_token'], true );
-        $data['cancel'] = $this->url->link( 'marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=payment', true );
+        $data['action'] = $this->url->link( 'extension/payment/humm', 'token=' . $this->session->data['token'], true );
+        $data['cancel'] = $this->url->link( 'extension/extension', 'token=' . $this->session->data['token'] . '&type=payment', true );
 
         // Dropdown Data
         $this->load->model( 'localisation/geo_zone' );
@@ -75,28 +75,28 @@ class ControllerExtensionPaymentHumm extends Controller {
 
         // Form Values
         $keys = [
-            'payment_humm_title',
-            'payment_humm_description',
-            'payment_humm_shop_name',
-            'payment_humm_region',
-            'payment_humm_gateway_environment',
-            'payment_humm_gateway_url',
-            'payment_humm_merchant_id',
-            'payment_humm_api_key',
-            'payment_humm_order_status_completed_id',
-            'payment_humm_order_status_pending_id',
-            'payment_humm_order_status_failed_id',
-            'payment_humm_geo_zone_id',
-            'payment_humm_status',
-            'payment_humm_sort_order',
+            'humm_title',
+            'humm_description',
+            'humm_shop_name',
+            'humm_region',
+            'humm_gateway_environment',
+            'humm_gateway_url',
+            'humm_merchant_id',
+            'humm_api_key',
+            'humm_order_status_completed_id',
+            'humm_order_status_pending_id',
+            'humm_order_status_failed_id',
+            'humm_geo_zone_id',
+            'humm_status',
+            'humm_sort_order',
         ];
 
         $defaults = [
-            'payment_humm_title'                     => 'Humm',
-            'payment_humm_description'               => 'Pay the easier way',
-            'payment_humm_order_status_completed_id' => 5,
-            'payment_humm_order_status_pending_id'   => 1,
-            'payment_humm_order_status_failed_id'    => 10,
+            'humm_title'                     => 'Humm',
+            'humm_description'               => 'Pay the easier way',
+            'humm_order_status_completed_id' => 5,
+            'humm_order_status_pending_id'   => 1,
+            'humm_order_status_failed_id'    => 10,
         ];
 
         foreach ( $keys as $key ) {
@@ -104,10 +104,8 @@ class ControllerExtensionPaymentHumm extends Controller {
                 $data[ $key ] = $this->request->post[ $key ];
             } else if ( ! $this->config->has( $key ) && isset( $defaults[ $key ] ) ) {
                 $data[ $key ] = $defaults[ $key ];
-            } else if ( $this->config->has( $key ) ) {
-                $data[ $key ] = $this->config->get( $key );
             } else {
-                $data[ $key ] = "";
+                $data[ $key ] = $this->config->get( $key );
             }
         }
 
@@ -129,10 +127,10 @@ class ControllerExtensionPaymentHumm extends Controller {
         }
 
         $keys = [
-            'payment_humm_title'       => 'Title',
-            'payment_humm_region'      => 'Region',
-            'payment_humm_merchant_id' => 'Merchant ID',
-            'payment_humm_api_key'     => 'API Key',
+            'humm_title'       => 'Title',
+            'humm_region'      => 'Region',
+            'humm_merchant_id' => 'Merchant ID',
+            'humm_api_key'     => 'API Key',
         ];
 
         foreach ( $keys as $key => $name ) {
@@ -142,7 +140,8 @@ class ControllerExtensionPaymentHumm extends Controller {
         }
 
         if (
-            $this->request->post['payment_humm_gateway_environment'] == 'other' && ( ! isset( $this->request->post['payment_humm_gateway_url'] ) || preg_match( '@^https://@', $this->request->post['payment_humm_gateway_url'] ) !== 1 )
+            $this->request->post['humm_environment'] == 'other'
+            && preg_match( '@^https://@', $this->request->post['humm_gateway_url'] ) !== 1
         ) {
             $this->error['humm_gateway_url'] = $this->language->get( 'error_gateway_url_format' );
         }

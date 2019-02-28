@@ -8,11 +8,11 @@ class ModelExtensionPaymentHumm extends Model {
      * @return mixed[]
      */
     public function getMethod( $address, $total ) {
-        $query = $this->db->query( "SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int) $this->config->get( 'payment_humm_geo_zone_id' ) . "' AND country_id = '" . (int) $address['country_id'] . "' AND (zone_id = '" . (int) $address['zone_id'] . "' OR zone_id = '0')" );
+        $query = $this->db->query( "SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int) $this->config->get( 'humm_geo_zone_id' ) . "' AND country_id = '" . (int) $address['country_id'] . "' AND (zone_id = '" . (int) $address['zone_id'] . "' OR zone_id = '0')" );
 
         $status = false;
 
-        if ( ! $this->config->get( 'payment_humm_geo_zone_id' ) ) {
+        if ( ! $this->config->get( 'humm_geo_zone_id' ) ) {
             $status = true;
         } elseif ( $query->num_rows ) {
             $status = true;
@@ -21,13 +21,13 @@ class ModelExtensionPaymentHumm extends Model {
         $method_data = [];
 
         if ( $status ) {
-            $title = $this->config->get( 'payment_humm_title' );
+            $title = $this->config->get( 'humm_title' );
 
             $method_data = [
                 'code'       => 'humm',
-                'title'      => $this->config->get( 'payment_humm_title' ),
-                'terms'      => $this->config->get( 'payment_humm_description' ),
-                'sort_order' => $this->config->get( 'payment_humm_sort_order' ),
+                'title'      => $this->config->get( 'humm_title' ),
+                'terms'      => $this->config->get( 'humm_description' ),
+                'sort_order' => $this->config->get( 'humm_sort_order' ),
             ];
         }
 
@@ -52,7 +52,7 @@ class ModelExtensionPaymentHumm extends Model {
             }
         }
 
-        $hash = hash_hmac( 'sha256', $string, $this->config->get( 'payment_humm_api_key' ) );
+        $hash = hash_hmac( 'sha256', $string, $this->config->get( 'humm_api_key' ) );
 
         return str_replace( '-', '', $hash );
     }
@@ -100,18 +100,18 @@ class ModelExtensionPaymentHumm extends Model {
 
         $params = [
             // Required
-            'x_account_id'                   => $this->config->get( 'payment_humm_merchant_id' ),
+            'x_account_id'                   => $this->config->get( 'humm_merchant_id' ),
             'x_amount'                       => $this->currency->format( $order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false ),
             'x_currency'                     => $order_info['currency_code'],
             'x_reference'                    => $this->session->data['order_id'],
-            'x_shop_country'                 => $this->config->get( 'payment_humm_region' ),
-            'x_shop_name'                    => $this->config->get( 'payment_humm_shop_name' ),
+            'x_shop_country'                 => $this->config->get( 'humm_region' ),
+            'x_shop_name'                    => $this->config->get( 'humm_shop_name' ),
             'x_test'                         => 'false',
             'x_url_callback'                 => $this->url->link( 'extension/payment/humm/callback', '', true ),
             // Proxy files required as gateway doesn't append resulting request
             //  arguments to existing ones.
-            // 'x_url_cancel' => $url_prefix . 'catalog/controller/extension/payment/humm-cancel.php',
-            // 'x_url_complete' => $url_prefix . 'catalog/controller/extension/payment/humm-complete.php',
+            // 'x_url_cancel' => $url_prefix . 'humm/cancel.php',
+            // 'x_url_complete' => $url_prefix . 'humm/complete.php',
             'x_url_cancel'                   => $this->url->link( 'extension/payment/humm/cancel', '', true ),
             'x_url_complete'                 => $this->url->link( 'extension/payment/humm/complete', '', true ),
 
@@ -135,7 +135,6 @@ class ModelExtensionPaymentHumm extends Model {
             'x_customer_shipping_postcode'   => $order_info['shipping_postcode'],
             'x_customer_shipping_country'    => '',
             'x_description'                  => 'Order #' . $order_info['order_id'],
-            'abc123'                         => '1111',
         ];
 
         if ( $payment_country_info ) {
@@ -165,9 +164,9 @@ class ModelExtensionPaymentHumm extends Model {
      */
     public function getStatuses() {
         return [
-            'completed' => $this->config->get( 'payment_humm_order_status_completed_id' ),
-            'pending'   => $this->config->get( 'payment_humm_order_status_pending_id' ),
-            'failed'    => $this->config->get( 'payment_humm_order_status_failed_id' ),
+            'completed' => $this->config->get( 'humm_order_status_completed_id' ),
+            'pending'   => $this->config->get( 'humm_order_status_pending_id' ),
+            'failed'    => $this->config->get( 'humm_order_status_failed_id' ),
         ];
     }
 
@@ -190,13 +189,13 @@ class ModelExtensionPaymentHumm extends Model {
      * @return string
      */
     public function getGatewayUrl() {
-        $environment = $this->config->get( 'payment_humm_gateway_environment' );
+        $environment = $this->config->get( 'humm_gateway_environment' );
 
         if ( $environment == 'other' ) {
-            return $this->config->get( 'payment_humm_gateway_url' );
+            return $this->config->get( 'humm_gateway_url' );
         }
 
-        $region = $this->config->get( 'payment_humm_region' );
+        $region = $this->config->get( 'humm_region' );
 
         if ( $region == 'NZ' ) {
             $tld = 'co.nz';

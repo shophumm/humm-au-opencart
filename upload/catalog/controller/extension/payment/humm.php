@@ -143,9 +143,11 @@ class ControllerExtensionPaymentHumm extends Controller {
         ];
 
         // Required
-        foreach ( $required as $key => $value ) {
-            if ( ! isset( $request[ $key ] ) || empty( $request[ $key ] ) ) {
-                unset( $required[ $key ] );
+        // if an item exists(and is not empty) in $request, remove it from the $required array
+        // $required should be empty by the end to indicate all required items have been provided.
+        foreach ( $required as $seq => $value ) {
+            if ( isset( $request[ $value ] ) && ! empty( $request[ $value ] ) ) {
+                unset( $required[ $seq ] );
             }
         }
 
@@ -198,7 +200,7 @@ class ControllerExtensionPaymentHumm extends Controller {
     private function debugLogIncoming( $type ) {
         if ( static::IS_DEBUG ) {
             $str = var_export( [
-                'get'  => $_GET,
+                'get' => $_GET,
                 'post' => $_POST,
             ], true );
 
