@@ -1,35 +1,35 @@
-branches: 
-  only: 
-    - OC-3.0 
+branches:
+  only:
+    - OC-3.0
     - OC-2.3
     - OC-2.2
-environment: 
-  tag_name: "%APPVEYOR_REPO_TAG_NAME%" 
-  release_name: "humm-opencart_v%APPVEYOR_REPO_TAG_NAME%.ocmod.zip" 
-build_script: 
-  - ps: Invoke-Expression "7z a $env:release_name upload README.md LICENSE" 
-artifacts: 
-  - path: $(release_name) 
-    name: $(tag_name) 
-    type: zip 
-deploy: 
-  - provider: GitHub 
-    tag: $(APPVEYOR_REPO_TAG_NAME) 
-    release: v$(APPVEYOR_REPO_TAG_NAME) 
-    description: $(APPVEYOR_REPO_COMMIT_MESSAGE) 
-    auth_token: 
-      secure: vsGwkhjaQdCumvOvqTywfnwRMULrvO50y6GwVNF2FHe04dYKbEXyfhO6OMdUsaED 
-    artifact: /.*\.zip/ 
-    draft: false 
-    prerelease: false 
-    on: 
-      appveyor_repo_tag: true 
-notifications: 
-  - provider: Email 
-    to: 
+environment:
+  tag_name: "%APPVEYOR_REPO_TAG_NAME%"
+  release_name: "humm-opencart_v%APPVEYOR_REPO_TAG_NAME%.ocmod.zip"
+build_script:
+  - ps: Invoke-Expression "7z a $env:release_name upload README.md LICENSE"
+artifacts:
+  - path: $(release_name)
+    name: $(tag_name)
+    type: zip
+deploy:
+  - provider: GitHub
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    release: v$(APPVEYOR_REPO_TAG_NAME)
+    description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
+    auth_token:
+      secure: vsGwkhjaQdCumvOvqTywfnwRMULrvO50y6GwVNF2FHe04dYKbEXyfhO6OMdUsaED
+    artifact: /.*\.zip/
+    draft: false
+    prerelease: false
+    on:
+      appveyor_repo_tag: true
+notifications:
+  - provider: Email
+    to:
       - devadmin@shophumm.com.au
       - pit@shophumm.com.au
-  - provider: Slack 
-    auth_token: 
-      secure: yXpzER0fyDmh7wYR6zrrES+wGzz5010OpUvpb5UPMsQZO12Ag3TaeOjSsZ0tDQQ4WaNoNngsPOPiaYWmsfg3fhJrSyPy240FqSwDdhSPqC0= 
-    channel: '#alerts' 
+  - provider: Slack
+    auth_token:
+      secure: yXpzER0fyDmh7wYR6zrrES+wGzz5010OpUvpb5UPMsQZO12Ag3TaeOjSsZ0tDQQ4WaNoNngsPOPiaYWmsfg3fhJrSyPy240FqSwDdhSPqC0=
+    channel: '#alerts'
