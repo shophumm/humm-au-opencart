@@ -6,6 +6,8 @@ branches:
 environment:
   tag_name: "%APPVEYOR_REPO_TAG_NAME%"
   release_name: "humm-opencart_v%APPVEYOR_REPO_TAG_NAME%.ocmod.zip"
+before_build:
+  - ps: (Get-Content upload/catalog/model/extension/payment/humm.php).replace("humm_plugin_version_placeholder", $env:APPVEYOR_REPO_TAG_NAME ) | Set-Content upload/catalog/model/extension/payment/humm.php
 build_script:
   - ps: Invoke-Expression "7z a $env:release_name upload README.md LICENSE"
 artifacts:

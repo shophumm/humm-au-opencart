@@ -1,5 +1,7 @@
 <?php
 
+const HUMM_VERSION = 'humm_plugin_version_placeholder';
+
 class ModelExtensionPaymentHumm extends Model {
     /**
      * @param mixed[] $address
@@ -135,7 +137,7 @@ class ModelExtensionPaymentHumm extends Model {
             'x_customer_shipping_postcode'   => $order_info['shipping_postcode'],
             'x_customer_shipping_country'    => '',
             'x_description'                  => 'Order #' . $order_info['order_id'],
-            'abc123'                         => '1111',
+            'version_info'                   => 'plugin_' . HUMM_VERSION . '_on_OC_' . VERSION,
         ];
 
         if ( $payment_country_info ) {
@@ -155,7 +157,6 @@ class ModelExtensionPaymentHumm extends Model {
         }
 
         $params['x_signature'] = $this->getSignature( $params );
-
 
         return $params;
     }
