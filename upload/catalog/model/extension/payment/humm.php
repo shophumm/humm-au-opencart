@@ -1,6 +1,8 @@
 <?php
 
-const HUMM_VERSION = 'humm_plugin_version_placeholder';
+const HUMM_VERSION       = 'humm_plugin_version_placeholder';
+const HUMM_DESCRIPTION   = "Streeetch your payments";
+CONST OXIPAY_DESCRIPTION = 'Pay the easier way';
 
 class ModelExtensionPaymentHumm extends Model {
     /**
@@ -28,7 +30,7 @@ class ModelExtensionPaymentHumm extends Model {
             $method_data = [
                 'code'       => 'humm',
                 'title'      => $this->config->get( 'payment_humm_title' ),
-                'terms'      => $this->config->get( 'payment_humm_description' ),
+                'terms'      => $this->getDescription(),
                 'sort_order' => $this->config->get( 'payment_humm_sort_order' ),
             ];
         }
@@ -137,7 +139,7 @@ class ModelExtensionPaymentHumm extends Model {
             'x_customer_shipping_postcode'   => $order_info['shipping_postcode'],
             'x_customer_shipping_country'    => '',
             'x_description'                  => 'Order #' . $order_info['order_id'],
-            'version_info'                   => 'plugin_' . HUMM_VERSION . '_on_OC_' . VERSION,
+            'version_info'                   => 'plugin_' . HUMM_VERSION . '_on_OC_' . substr( VERSION, 0, 3 ),
         ];
 
         if ( $payment_country_info ) {
@@ -211,6 +213,19 @@ class ModelExtensionPaymentHumm extends Model {
             $prefix = 'securesandbox';
         }
 
-        return 'https://' . $prefix . '.humm.' . $tld . '/Checkout?platform=Default';
+        $title = $this->config->get( 'payment_humm_title' );
+
+        if ( $title == 'Humm' ) {
+            return 'https://' . $prefix . '.shophumm.' . $tld . '/Checkout?platform=Default';
+        }
+
+        return 'https://' . $prefix . '.oxipay.' . $tld . '/Checkout?platform=Default';
+    }
+
+    public function getDescription() {
+        $title       = $this->config->get( 'payment_humm_title' );
+        $description = $title == 'Humm' ? HUMM_DESCRIPTION : OXIPAY_DESCRIPTION;
+
+        return $description;
     }
 }

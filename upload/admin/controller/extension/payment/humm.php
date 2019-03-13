@@ -76,7 +76,6 @@ class ControllerExtensionPaymentHumm extends Controller {
         // Form Values
         $keys = [
             'payment_humm_title',
-            'payment_humm_description',
             'payment_humm_shop_name',
             'payment_humm_region',
             'payment_humm_gateway_environment',
@@ -93,7 +92,6 @@ class ControllerExtensionPaymentHumm extends Controller {
 
         $defaults = [
             'payment_humm_title'                     => 'Humm',
-            'payment_humm_description'               => 'Pay the easier way',
             'payment_humm_order_status_completed_id' => 5,
             'payment_humm_order_status_pending_id'   => 1,
             'payment_humm_order_status_failed_id'    => 10,
