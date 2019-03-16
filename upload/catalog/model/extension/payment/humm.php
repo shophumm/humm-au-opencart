@@ -205,12 +205,12 @@ class ModelExtensionPaymentHumm extends Model {
 
         $title       = $this->config->get( 'payment_humm_title' );
         $domainsTest = array(
-            'Humm'   => 'test3-cart.shophumm',
-            'Oxipay' => 'securesandbox.oxipay'
+            'Humm'   => 'test3-cart.shophumm.',
+            'Oxipay' => 'securesandbox.oxipay.'
         );
         $domains     = array(
-            'Humm'   => 'cart.shophumm',
-            'Oxipay' => 'secure.oxipay'
+            'Humm'   => 'cart.shophumm.',
+            'Oxipay' => 'secure.oxipay.'
         );
 
         return 'https://' . ( $environment == 'live' ? $domains[ $title ] : $domainsTest[ $title ] ) . $country_domain . '/Checkout?platform=Default';
