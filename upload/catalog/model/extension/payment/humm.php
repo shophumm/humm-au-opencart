@@ -201,25 +201,19 @@ class ModelExtensionPaymentHumm extends Model {
 
         $region = $this->config->get( 'payment_humm_region' );
 
-        if ( $region == 'NZ' ) {
-            $tld = 'co.nz';
-        } else {
-            $tld = 'com.au';
-        }
+        $country_domain = ( $region == 'NZ' ) ? 'co.nz' : 'com.au';
 
-        if ( $environment == 'live' ) {
-            $prefix = 'secure';
-        } else {
-            $prefix = 'securesandbox';
-        }
+        $title       = $this->config->get( 'payment_humm_title' );
+        $domainsTest = array(
+            'Humm'   => 'test3-cart.shophumm',
+            'Oxipay' => 'securesandbox.oxipay'
+        );
+        $domains     = array(
+            'Humm'   => 'cart.shophumm',
+            'Oxipay' => 'secure.oxipay'
+        );
 
-        $title = $this->config->get( 'payment_humm_title' );
-
-        if ( $title == 'Humm' ) {
-            return 'https://' . $prefix . '.shophumm.' . $tld . '/Checkout?platform=Default';
-        }
-
-        return 'https://' . $prefix . '.oxipay.' . $tld . '/Checkout?platform=Default';
+        return 'https://' . ( $environment == 'live' ? $domains[ $title ] : $domainsTest[ $title ] ) . $country_domain . '/Checkout?platform=Default';
     }
 
     public function getDescription() {
