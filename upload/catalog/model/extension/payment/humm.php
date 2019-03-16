@@ -139,7 +139,7 @@ class ModelExtensionPaymentHumm extends Model {
             'x_customer_shipping_postcode'   => $order_info['shipping_postcode'],
             'x_customer_shipping_country'    => '',
             'x_description'                  => 'Order #' . $order_info['order_id'],
-            'version_info'                   => 'plugin_' . HUMM_VERSION . '_on_OC_' . substr( VERSION, 0, 3 ),
+            'version_info'                   => 'Humm_' . HUMM_VERSION . '_on_OC_' . substr( VERSION, 0, 3 ),
         ];
 
         if ( $payment_country_info ) {
