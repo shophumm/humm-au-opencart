@@ -1,8 +1,11 @@
 branches:
   only:
-    - OC-3.0
-    - OC-2.3
-    - OC-2.2
+    - develop/3.0
+    - develop/2.3
+    - develop/2.2
+    - master/3.0
+    - master/2.3
+    - master/2.2
 environment:
   tag_name: "%APPVEYOR_REPO_TAG_NAME%"
   release_name: "humm-opencart_v%APPVEYOR_REPO_TAG_NAME%.ocmod.zip"
@@ -20,7 +23,7 @@ deploy:
     release: v$(APPVEYOR_REPO_TAG_NAME)
     description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
     auth_token:
-      secure: vsGwkhjaQdCumvOvqTywfnwRMULrvO50y6GwVNF2FHe04dYKbEXyfhO6OMdUsaED
+      secure: UaYGIzw09m+5DkdlA5zDuCr5x71z0KFvgquQhFSMxuJiUmltfok5GuMk8aGpG5U6
     artifact: /.*\.zip/
     draft: false
     prerelease: false
@@ -33,5 +36,5 @@ notifications:
       - pit@shophumm.com.au
   - provider: Slack
     auth_token:
-      secure: yXpzER0fyDmh7wYR6zrrES+wGzz5010OpUvpb5UPMsQZO12Ag3TaeOjSsZ0tDQQ4WaNoNngsPOPiaYWmsfg3fhJrSyPy240FqSwDdhSPqC0=
+      secure: lgjOGAi/xfra+Ezjg696zGwfMyEivWbNo6ho9GwbeQConO2VwxX2txxjWrZVqAaxTtI7y/ODz0HG3uMfIiM5wF2Fa0KsT8I+KL7PW9BbzpQ=
     channel: '#alerts'
