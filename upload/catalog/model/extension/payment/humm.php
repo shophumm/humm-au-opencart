@@ -15,7 +15,6 @@ class ModelExtensionPaymentHumm extends Model {
         $query = $this->db->query( "SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int) $this->config->get( 'payment_humm_geo_zone_id' ) . "' AND country_id = '" . (int) $address['country_id'] . "' AND (zone_id = '" . (int) $address['zone_id'] . "' OR zone_id = '0')" );
 
         $status = false;
-
         if ( ! $this->config->get( 'payment_humm_geo_zone_id' ) ) {
             $status = true;
         } elseif ( $query->num_rows ) {
@@ -23,10 +22,7 @@ class ModelExtensionPaymentHumm extends Model {
         }
 
         $method_data = [];
-
         if ( $status ) {
-            $title = $this->config->get( 'payment_humm_title' );
-
             $method_data = [
                 'code'       => 'humm',
                 'title'      => $this->config->get( 'payment_humm_title' ),
@@ -47,15 +43,12 @@ class ModelExtensionPaymentHumm extends Model {
      */
     public function getSignature( $params ) {
         $string = '';
-
         ksort( $params );
-
         foreach ( $params as $key => $value ) {
             if ( substr( $key, 0, 2 ) === 'x_' ) {
                 $string .= $key . $value;
             }
         }
-
         $hash = hash_hmac( 'sha256', $string, $this->config->get( 'payment_humm_api_key' ) );
 
         return str_replace( '-', '', $hash );
@@ -88,19 +81,11 @@ class ModelExtensionPaymentHumm extends Model {
     public function getParams() {
         $this->load->model( 'checkout/order' );
 
-        $order_info = $this->model_checkout_order->getOrder( $this->session->data['order_id'] );
-
-        $payment_country_info = $this->db->query( "SELECT * FROM " . DB_PREFIX . "country WHERE country_id = '" . (int) $order_info['payment_country_id'] . "' AND status = 1 LIMIT 1" )->row;
-        $payment_zone_info    = $this->db->query( "SELECT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int) $order_info['payment_zone_id'] . "' AND status = 1 AND country_id = '" . (int) $order_info['payment_country_id'] . "' LIMIT 1" )->row;
-
+        $order_info            = $this->model_checkout_order->getOrder( $this->session->data['order_id'] );
+        $payment_country_info  = $this->db->query( "SELECT * FROM " . DB_PREFIX . "country WHERE country_id = '" . (int) $order_info['payment_country_id'] . "' AND status = 1 LIMIT 1" )->row;
+        $payment_zone_info     = $this->db->query( "SELECT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int) $order_info['payment_zone_id'] . "' AND status = 1 AND country_id = '" . (int) $order_info['payment_country_id'] . "' LIMIT 1" )->row;
         $shipping_country_info = $this->db->query( "SELECT * FROM " . DB_PREFIX . "country WHERE country_id = '" . (int) $order_info['shipping_country_id'] . "' AND status = 1 LIMIT 1" )->row;
         $shipping_zone_info    = $this->db->query( "SELECT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int) $order_info['shipping_zone_id'] . "' AND status = 1 AND country_id = '" . (int) $order_info['shipping_country_id'] . "' LIMIT 1" )->row;
-
-        $url_prefix = (
-        $this->config->get( 'site_ssl' )
-            ? $this->config->get( 'site_ssl' )
-            : $this->config->get( 'site_base' )
-        );
 
         $params = [
             // Required
@@ -112,10 +97,6 @@ class ModelExtensionPaymentHumm extends Model {
             'x_shop_name'                    => $this->config->get( 'payment_humm_shop_name' ),
             'x_test'                         => 'false',
             'x_url_callback'                 => $this->url->link( 'extension/payment/humm/callback', '', true ),
-            // Proxy files required as gateway doesn't append resulting request
-            //  arguments to existing ones.
-            // 'x_url_cancel' => $url_prefix . 'catalog/controller/extension/payment/humm-cancel.php',
-            // 'x_url_complete' => $url_prefix . 'catalog/controller/extension/payment/humm-complete.php',
             'x_url_cancel'                   => $this->url->link( 'extension/payment/humm/cancel', '', true ),
             'x_url_complete'                 => $this->url->link( 'extension/payment/humm/complete', '', true ),
 
@@ -194,21 +175,18 @@ class ModelExtensionPaymentHumm extends Model {
      */
     public function getGatewayUrl() {
         $environment = $this->config->get( 'payment_humm_gateway_environment' );
-
         if ( $environment == 'other' ) {
             return $this->config->get( 'payment_humm_gateway_url' );
         }
 
-        $region = $this->config->get( 'payment_humm_region' );
-
+        $region         = $this->config->get( 'payment_humm_region' );
         $country_domain = ( $region == 'NZ' ) ? 'co.nz' : 'com.au';
-
-        $title       = $this->config->get( 'payment_humm_title' );
-        $domainsTest = array(
+        $title          = $this->config->get( 'payment_humm_title' );
+        $domainsTest    = array(
             'Humm'   => 'test3-cart.shophumm.',
             'Oxipay' => 'securesandbox.oxipay.'
         );
-        $domains     = array(
+        $domains        = array(
             'Humm'   => 'cart.shophumm.',
             'Oxipay' => 'secure.oxipay.'
         );
