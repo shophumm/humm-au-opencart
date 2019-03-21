@@ -74,7 +74,7 @@ class ModelExtensionPaymentHumm extends Model {
     }
 
     /**
-     * Generate array of parameters to be passed onto Humm.
+     * Generate array of parameters to be passed onto humm.
      *
      * @return mixed[]
      */
