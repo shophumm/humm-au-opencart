@@ -1,5 +1,7 @@
 <?php
 
+const HUMM_VERSION       = 'humm_plugin_version_placeholder';
+
 class ModelExtensionPaymentHumm extends Model {
     /**
      * @param mixed[] $address
@@ -43,15 +45,12 @@ class ModelExtensionPaymentHumm extends Model {
      */
     public function getSignature( $params ) {
         $string = '';
-
         ksort( $params );
-
         foreach ( $params as $key => $value ) {
             if ( substr( $key, 0, 2 ) === 'x_' ) {
                 $string .= $key . $value;
             }
         }
-
         $hash = hash_hmac( 'sha256', $string, $this->config->get( 'humm_api_key' ) );
 
         return str_replace( '-', '', $hash );
@@ -135,6 +134,7 @@ class ModelExtensionPaymentHumm extends Model {
             'x_customer_shipping_postcode'   => $order_info['shipping_postcode'],
             'x_customer_shipping_country'    => '',
             'x_description'                  => 'Order #' . $order_info['order_id'],
+            'version_info'                   => 'Humm_' . HUMM_VERSION . '_on_OC_' . substr( VERSION, 0, 3 ),
         ];
 
         if ( $payment_country_info ) {
