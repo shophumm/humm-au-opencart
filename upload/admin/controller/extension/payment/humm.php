@@ -93,7 +93,7 @@ class ControllerExtensionPaymentHumm extends Controller {
 
         $defaults = [
             'humm_title'                     => 'Humm',
-            'humm_description'               => 'Pay the easier way',
+            'humm_description'               => 'Pay in slices. No interest ever.',
             'humm_order_status_completed_id' => 5,
             'humm_order_status_pending_id'   => 1,
             'humm_order_status_failed_id'    => 10,
