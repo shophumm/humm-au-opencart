@@ -77,7 +77,7 @@ class ModelExtensionPaymentHumm extends Model {
     }
 
     /**
-     * Generate array of parameters to be passed onto Humm.
+     * Generate array of parameters to be passed onto humm.
      *
      * @return mixed[]
      */
@@ -204,11 +204,11 @@ class ModelExtensionPaymentHumm extends Model {
         }
 
         if ( $environment == 'live' ) {
-            $prefix = 'secure';
+            $prefix = 'cart';
         } else {
-            $prefix = 'securesandbox';
+            $prefix = 'integration-cart';
         }
 
-        return 'https://' . $prefix . '.humm.' . $tld . '/Checkout?platform=Default';
+        return 'https://' . $prefix . '.shophumm.' . $tld . '/Checkout?platform=Default';
     }
 }
