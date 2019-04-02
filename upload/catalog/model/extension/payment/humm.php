@@ -1,7 +1,7 @@
 <?php
 
 const HUMM_VERSION       = 'humm_plugin_version_placeholder';
-const HUMM_DESCRIPTION   = "Streeetch your payments";
+const HUMM_DESCRIPTION   = "Pay in slices. No interest ever.";
 CONST OXIPAY_DESCRIPTION = 'Pay the easier way';
 
 class ModelExtensionPaymentHumm extends Model {
