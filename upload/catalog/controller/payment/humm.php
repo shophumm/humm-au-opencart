@@ -2,6 +2,7 @@
 
 class ControllerPaymentHumm extends Controller {
     const IS_DEBUG = false;
+    const HUMM_MINIMUM_PURCHASE = 1;
 
     /**
      * @param object $registry
@@ -20,7 +21,7 @@ class ControllerPaymentHumm extends Controller {
      * @return string
      */
     public function index() {
-        if ( $this->cart->getTotal() >= 20 ) {
+        if ( $this->cart->getTotal() >= static::$HUMM_MINIMUM_PURCHASE ) {
             $data['button_confirm'] = $this->language->get( 'button_confirm' );
 
             $data['text_loading'] = $this->language->get( 'text_loading' );
@@ -29,7 +30,7 @@ class ControllerPaymentHumm extends Controller {
 
             $data['action'] = $this->model_payment_humm->getGatewayUrl();
         } else {
-            $data['error'] = sprintf( $this->language->get( 'error_amount' ), $this->currency->format( 20, $this->session->data['currency'], 1 ) );
+            $data['error'] = sprintf( $this->language->get( 'error_amount' ), $this->currency->format( static::$HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1 ) );
         }
         if ( version_compare( VERSION, '2.2.0.0', '>=' ) ) {
             $tpl_path = 'payment/humm';
