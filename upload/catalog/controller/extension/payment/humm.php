@@ -2,6 +2,7 @@
 
 class ControllerExtensionPaymentHumm extends Controller {
     const IS_DEBUG = false;
+    const HUMM_MINIMUM_PURCHASE = 1;
 
     /**
      * @param object $registry
@@ -20,7 +21,7 @@ class ControllerExtensionPaymentHumm extends Controller {
      * @return string
      */
     public function index() {
-        if ( $this->cart->getTotal() >= 20 ) {
+        if ( $this->cart->getTotal() >= static::$HUMM_MINIMUM_PURCHASE ) {
             $data['button_confirm'] = $this->language->get( 'button_confirm' );
 
             $data['text_loading'] = $this->language->get( 'text_loading' );
@@ -29,7 +30,7 @@ class ControllerExtensionPaymentHumm extends Controller {
 
             $data['action'] = $this->model_extension_payment_humm->getGatewayUrl();
         } else {
-            $data['error'] = sprintf( $this->language->get( 'error_amount' ), $this->currency->format( 20, $this->session->data['currency'], 1 ) );
+            $data['error'] = sprintf( $this->language->get( 'error_amount' ), $this->currency->format( static::$HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1 ) );
         }
 
         return $this->load->view( 'extension/payment/humm', $data );
