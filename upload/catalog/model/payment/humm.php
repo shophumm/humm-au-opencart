@@ -74,7 +74,7 @@ class ModelPaymentHumm extends Model {
     }
 
     /**
-     * Generate array of parameters to be passed onto humm.
+     * Generate array of parameters to be passed onto humm/Oxipay.
      *
      * @return mixed[]
      */
