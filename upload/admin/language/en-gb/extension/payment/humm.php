@@ -26,7 +26,7 @@ $_['help_merchant_id']             = 'Humm/Oxipay will have supplied you with yo
 $_['help_api_key']                 = 'Humm/Oxipay will have supplied you with your API key. Contact us if you cannot find it.';
 
 // Entry
-$_['entry_title']                  = 'Humm / Oxipay';
+$_['entry_title']                  = 'Humm';
 $_['entry_description']            = 'Description';
 $_['entry_shop_name']              = 'Shop Name';
 $_['entry_region']                 = 'Region';
