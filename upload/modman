@@ -1,0 +1,8 @@
+admin/controller/extension/payment/humm.php  upload/admin/controller/extension/payment/humm.php
+admin/language/en-gb/extension/payment/humm.php upload/admin/language/en-gb/extension/payment/humm.php
+admin/view/image/payment/humm.png  upload/admin/view/image/payment/humm.png
+admin/view/template/extension/payment/humm.twig upload/admin/view/template/extension/payment/humm.twig
+catalog/controller/extension/payment/humm.php upload/catalog/controller/extension/payment/humm.php
+catalog/language/en-gb/extension/payment/humm.php upload/catalog/language/en-gb/extension/payment/humm.php
+catalog/model/extension/payment/humm.php  upload/catalog/model/extension/payment/humm.php
+catalog/view/theme/default/template/extension/payment/humm.twig upload/catalog/view/theme/default/template/extension/payment/humm.twig
