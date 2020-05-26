@@ -22,6 +22,24 @@
         </div>
     </div>
     <div class="container-fluid">
+    <div class="humm-header">
+        <div class="humm-payment-logo"></div>
+        <div class="humm-payment-byline">Little things. Big things. Interest freeee!<br/>Humm Payment</div>
+    </div>
+    <div id="humm_simplepath">
+        <div id="simplepath_unsupported">
+            <p><a href="https://docs.shophumm.com.au/ecommerce/opencart//" target="_blank"> Humm OpenCart
+                    Documentation </a></p>
+        </div>
+    </div>
+
+    <div id="humm_simplepath_back">
+        <p>If you don't have a humm merchant account you may join <a href="https://www.shophumm.com.au/sell-with-humm"
+                                                                     target="_blank"><span>here</span></a></p>
+    </div>
+
+    </div>
+    <div class="container-fluid">
         {% if error_humm_warning %}
             <div class="alert alert-danger">
                 <i class="fa fa-exclamation-circle"></i> {{ error_humm_warning }}
@@ -41,14 +59,18 @@
                         <legend>{{ text_heading_display }}</legend>
                         <p>{{ text_description_display }}</p>
 
+
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="input-title">
                                 {{ entry_title }}
                             </label>
                             <div class="col-sm-10">
                                 <select name="payment_humm_title" id="input-title" class="form-control">
-                                    <option value="Oxipay" {{ payment_humm_title == 'Oxipay' ? ' selected' : '' }}>Oxipay</option>
-                                    <option value="Humm" {{ payment_humm_title =='Humm' ? ' selected' : '' }}>Humm</option>
+                                    <option value="Oxipay" {{ payment_humm_title == 'Oxipay' ? ' selected' : '' }}>
+                                        Oxipay
+                                    </option>
+                                    <option value="Humm" {{ payment_humm_title =='Humm' ? ' selected' : '' }}>Humm
+                                    </option>
                                 </select>
                             </div>
                         </div>
