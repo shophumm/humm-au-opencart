@@ -40,6 +40,7 @@ $_['entry_order_status_failed']    = 'Order Status Failed';
 $_['entry_geo_zone']               = 'Geo Zone';
 $_['entry_status']                 = 'Status';
 $_['entry_sort_order']             = 'Sort Order';
+$_['entry_force_humm']             = 'Force_humm';
 
 // Error
 $_['error_permission']             = 'Warning: You do not have permission to modify payment humm/Oxipay!';
