@@ -87,6 +87,8 @@ class ControllerExtensionPaymentHumm extends Controller {
             'payment_humm_geo_zone_id',
             'payment_humm_status',
             'payment_humm_sort_order',
+            'payment_humm_force',
+            'payment_humm_log',
         ];
 
         $defaults = [
