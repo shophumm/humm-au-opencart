@@ -1,6 +1,6 @@
 <?php
 
-class ControllerExtensionPaymentHumm extends Controller {
+class ControllerExtensionPaymentHumm extends  Controller {
     const IS_DEBUG = true;
     const HUMM_MINIMUM_PURCHASE = 1;
 
