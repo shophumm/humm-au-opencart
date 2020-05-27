@@ -1,7 +1,7 @@
 <?php
 
 class ControllerExtensionPaymentHumm extends Controller {
-    const IS_DEBUG = false;
+    const IS_DEBUG = true;
     const HUMM_MINIMUM_PURCHASE = 1;
 
     /**
@@ -11,7 +11,6 @@ class ControllerExtensionPaymentHumm extends Controller {
      */
     public function __construct( $registry ) {
         parent::__construct( $registry );
-
         $this->load->language( 'extension/payment/humm' );
         $this->load->model( 'extension/payment/humm' );
         $this->load->model( 'checkout/order' );
@@ -170,7 +169,8 @@ class ControllerExtensionPaymentHumm extends Controller {
     }
 
     /**
-     * @param mixed[] $request
+     * @param $order_info
+     * @param $request
      */
     private function updateOrder( $order_info, $request ) {
         $order_status_id = $this->model_extension_payment_humm->getStatus( $request['x_result'] );
@@ -189,7 +189,6 @@ class ControllerExtensionPaymentHumm extends Controller {
         $comment = strip_tags( $comment );
 
         $this->model_checkout_order->addOrderHistory( $order_info['order_id'], $order_status_id, $comment, false );
-
         return $request['x_result'];
     }
 

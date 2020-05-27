@@ -2,7 +2,6 @@
 
 class ControllerExtensionPaymentHumm extends Controller {
     private $error = [];
-
     /**
      * @return string
      */

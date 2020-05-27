@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']                = 'humm/Oxipay';
+$_['heading_title']                = 'Humm';
 
 // Text
 $_['text_extension']               = 'Extensions';
@@ -41,6 +41,7 @@ $_['entry_geo_zone']               = 'Geo Zone';
 $_['entry_status']                 = 'Status';
 $_['entry_sort_order']             = 'Sort Order';
 $_['entry_force_humm']             = 'Force_humm';
+$_['entry_Humm_log']               = 'Humm_log';
 
 // Error
 $_['error_permission']             = 'Warning: You do not have permission to modify payment humm/Oxipay!';
