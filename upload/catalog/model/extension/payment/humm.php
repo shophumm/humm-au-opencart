@@ -103,7 +103,7 @@ class ModelExtensionPaymentHumm extends Model
             'x_shop_country' => $this->config->get('payment_humm_region'),
             'x_shop_name' => $this->config->get('payment_humm_shop_name'),
             'x_test' => 'false',
-            'x_url_callback' => $this->url->link('extension/payment/humm/callback', '', true),
+//           'x_url_callback' => $this->url->link('extension/payment/humm/callback', '', true),
             'x_url_cancel' => $this->url->link('extension/payment/humm/cancel', '', true),
             'x_url_complete' => $this->url->link('extension/payment/humm/complete', '', true),
 

@@ -78,7 +78,6 @@ class ControllerExtensionPaymentHumm extends Controller
         try {
             $order_info = $this->getOrderAndVerifyResponse($this->request->get);
         } catch (\Exception $e) {
-            // Give the customer a general error
             $this->session->data['error'] = $this->language->get('text_transaction_verification');
 
             $this->response->redirect($this->url->link('checkout/checkout', '', true));
@@ -105,9 +104,8 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     public function cancel()
     {
-
+        $this->debugLogIncoming($_SERVER["REQUEST_URI"]);
         $this->session->data['error'] = $this->language->get('text_transaction_cancelled');
-
         $this->response->redirect($this->url->link('checkout/checkout', '', true));
     }
 
@@ -199,7 +197,7 @@ class ControllerExtensionPaymentHumm extends Controller
         $comment = strip_tags($comment);
 
         $this->model_checkout_order->addOrderHistory($order_info['order_id'], $order_status_id, $comment, false);
-        ModelExtensionPaymentHumm::updateLog(sprintf("%s %s","update Order\n\r",$comment));
+//      ModelExtensionPaymentHumm::updateLog(sprintf("%s %s","update Order\n\r",$comment));
         return $request['x_result'];
     }
 
