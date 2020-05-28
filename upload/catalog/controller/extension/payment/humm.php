@@ -91,6 +91,7 @@ class ControllerExtensionPaymentHumm extends Controller
         // Failed transaction outcome
         if ($this->request->get['x_result'] == 'failed') {
             $this->session->data['error'] = $this->language->get('text_transaction_failed');
+            ModelExtensionPaymentHumm::updateLog("End failed transaction..");
 
             $this->response->redirect($this->url->link('checkout/checkout', '', true));
         }
@@ -198,9 +199,9 @@ class ControllerExtensionPaymentHumm extends Controller
         $comment .= 'Amount: ' . $request['x_amount'] . "\n";
         $comment .= 'Currency: ' . $request['x_currency'] . "\n";
         $comment = strip_tags($comment);
+        ModelExtensionPaymentHumm::updateLog(sprintf("%s %s","update Order\n\r",$comment),true);
 
         $this->model_checkout_order->addOrderHistory($order_info['order_id'], $order_status_id, $comment, false);
-//      ModelExtensionPaymentHumm::updateLog(sprintf("%s %s","update Order\n\r",$comment));
         return $request['x_result'];
     }
 
