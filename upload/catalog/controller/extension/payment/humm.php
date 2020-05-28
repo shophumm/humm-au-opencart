@@ -24,7 +24,6 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     public function index()
     {
-        $this->debugLogIncoming($_SERVER["REQUEST_URI"]);
         if ($this->cart->getTotal() >= static::HUMM_MINIMUM_PURCHASE) {
             $data['button_confirm'] = $this->language->get('button_confirm');
 
@@ -34,10 +33,10 @@ class ControllerExtensionPaymentHumm extends Controller
 
             $data['action'] = $this->model_extension_payment_humm->getGatewayUrl();
         } else {
-            $data['error'] = sprintf($this->language->get('error_amount'), $this->currency->format(static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1));
+          $data['error'] = sprintf($this->language->get('error_amount'), $this->currency->format(static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1));
         }
-
-        ModelExtensionPaymentHumm::updateLog("start return call back log");
+        ModelExtensionPaymentHumm::updateLog("Start Transaction...");
+        ModelExtensionPaymentHumm::updateLog($data,true);
         return $this->load->view('extension/payment/humm', $data);
     }
 
@@ -98,6 +97,7 @@ class ControllerExtensionPaymentHumm extends Controller
 
         // Success!
         $this->response->redirect($this->url->link('checkout/success', '', true));
+        ModelExtensionPaymentHumm::updateLog("End Successful transaction..");
     }
 
     /**
