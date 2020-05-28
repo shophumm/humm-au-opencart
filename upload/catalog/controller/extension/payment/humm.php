@@ -3,6 +3,7 @@
 class ControllerExtensionPaymentHumm extends  Controller {
     const IS_DEBUG = true;
     const HUMM_MINIMUM_PURCHASE = 1;
+    public $log;
 
     /**
      * @param object $registry
@@ -32,6 +33,7 @@ class ControllerExtensionPaymentHumm extends  Controller {
             $data['error'] = sprintf( $this->language->get( 'error_amount' ), $this->currency->format( static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1 ) );
         }
 
+        ModelExtensionPaymentHumm::updateLog("start-log");
         return $this->load->view( 'extension/payment/humm', $data );
     }
 
