@@ -25,7 +25,8 @@ class ControllerExtensionPaymentHumm extends Controller
     public function index()
     {
         if ($this->cart->getTotal() >= static::HUMM_MINIMUM_PURCHASE) {
-            $data['button_confirm'] = $this->language->get('button_confirm');
+//            $data['button_confirm'] = $this->language->get('button_confirm');
+            $data['button_confirm'] = "Continue to Humm";
 
             $data['text_loading'] = $this->language->get('text_loading');
 
@@ -105,8 +106,10 @@ class ControllerExtensionPaymentHumm extends Controller
     public function cancel()
     {
         $this->debugLogIncoming($_SERVER["REQUEST_URI"]);
+        ModelExtensionPaymentHumm::updateLog("End cancel transaction..");
         $this->session->data['error'] = $this->language->get('text_transaction_cancelled');
         $this->response->redirect($this->url->link('checkout/checkout', '', true));
+
     }
 
     /**
@@ -122,7 +125,7 @@ class ControllerExtensionPaymentHumm extends Controller
             $params[] = $key . '=' . $value;
         }
 
-        $this->log->write('Humm Error: ' . $comment . ' (' . implode('; ', $params) . ')');
+        ModelExtensionPaymentHumm::updateLog('Humm Error: ' . $comment . ' (' . implode('; ', $params) . ')');
 
         $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 400 Bad Request');
 
