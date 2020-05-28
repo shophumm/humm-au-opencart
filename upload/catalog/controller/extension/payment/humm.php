@@ -32,6 +32,7 @@ class ControllerExtensionPaymentHumm extends Controller
             $data['params'] = $this->model_extension_payment_humm->getParams();
 
             $data['action'] = $this->model_extension_payment_humm->getGatewayUrl();
+
         } else {
           $data['error'] = sprintf($this->language->get('error_amount'), $this->currency->format(static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1));
         }
