@@ -2,7 +2,7 @@
 
 class ControllerExtensionPaymentHumm extends Controller
 {
-    const IS_DEBUG = true;
+    const IS_DEBUG = false;
     const HUMM_MINIMUM_PURCHASE = 1;
     public $log;
 
@@ -24,6 +24,7 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     public function index()
     {
+        $this->debugLogIncoming($_SERVER["REQUEST_URI"]);
         if ($this->cart->getTotal() >= static::HUMM_MINIMUM_PURCHASE) {
             $data['button_confirm'] = $this->language->get('button_confirm');
 
@@ -36,7 +37,7 @@ class ControllerExtensionPaymentHumm extends Controller
             $data['error'] = sprintf($this->language->get('error_amount'), $this->currency->format(static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1));
         }
 
-        ModelExtensionPaymentHumm::updateLog("start-log");
+        ModelExtensionPaymentHumm::updateLog("start return call back log");
         return $this->load->view('extension/payment/humm', $data);
     }
 
@@ -45,9 +46,9 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     public function callback()
     {
-        $this->debugLogIncoming('Callback');
 
         // Validate Response
+        $this->debugLogIncoming($_SERVER["REQUEST_URI"]);
         try {
             $order_info = $this->getOrderAndVerifyResponse($this->request->post);
         } catch (\Exception $e) {
@@ -74,8 +75,7 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     public function complete()
     {
-        $this->debugLogIncoming('Complete');
-        // Validate Response
+        $this->debugLogIncoming($_SERVER["REQUEST_URI"]);
         try {
             $order_info = $this->getOrderAndVerifyResponse($this->request->get);
         } catch (\Exception $e) {
@@ -105,7 +105,6 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     public function cancel()
     {
-        $this->debugLogIncoming('Cancel');
 
         $this->session->data['error'] = $this->language->get('text_transaction_cancelled');
 
@@ -150,9 +149,7 @@ class ControllerExtensionPaymentHumm extends Controller
             'x_timestamp',
             'x_result',
         ];
-
-        ModelExtensionPaymentHumm::updateLog("Return Info");
-        ModelExtensionPaymentHumm::updateLog($request);
+        ModelExtensionPaymentHumm::updateLog($request,true);
 
         // Required
         foreach ($required as $key => $value) {
@@ -202,7 +199,7 @@ class ControllerExtensionPaymentHumm extends Controller
         $comment = strip_tags($comment);
 
         $this->model_checkout_order->addOrderHistory($order_info['order_id'], $order_status_id, $comment, false);
-        ModelExtensionPaymentHumm::updateLog(sprintf("%s %s","update Order",$comment));
+        ModelExtensionPaymentHumm::updateLog(sprintf("%s %s","update Order\n\r",$comment));
         return $request['x_result'];
     }
 
@@ -211,13 +208,11 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     private function debugLogIncoming($type)
     {
-        if (static::IS_DEBUG) {
             $str = var_export([
                 'get' => $_GET,
                 'post' => $_POST,
             ], true);
+            ModelExtensionPaymentHumm::updateLog('Humm ' . $type . ' Start Debug: ' . $str,true);
 
-            $this->log->write('Humm ' . $type . ' Debug: ' . $str);
-        }
     }
 }

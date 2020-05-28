@@ -218,15 +218,21 @@ class ModelExtensionPaymentHumm extends Model
     /**
      *
      */
-    static public function updateLog($message=null)
+    static public function updateLog($message=null,$line=false)
     {
-        if(self::$hummlog){
+        if (!self::$hummlog) {
+            self::$hummlog = new Log("hummPayment.log");
+        }
+
+        if (is_string($message) || is_numeric($message))
+        {
+            self::$hummlog->write($message);
+        }
+        else {
             self::$hummlog->write(json_encode($message));
         }
-        else
-        {
-            self::$hummlog = new Log("hummPayment.log");
-            self::$hummlog->write($message);
+        if ($line){
+            self::$hummlog->write("=====================================================");
         }
     }
 }
