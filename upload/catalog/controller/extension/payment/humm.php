@@ -25,7 +25,6 @@ class ControllerExtensionPaymentHumm extends Controller
     public function index()
     {
         if ($this->cart->getTotal() >= static::HUMM_MINIMUM_PURCHASE) {
-//            $data['button_confirm'] = $this->language->get('button_confirm');
             $data['button_confirm'] = "Continue to Humm";
 
             $data['text_loading'] = $this->language->get('text_loading');
