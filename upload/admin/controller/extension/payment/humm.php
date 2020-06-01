@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ControllerExtensionPaymentHumm
+ */
+
 class ControllerExtensionPaymentHumm extends Controller
 {
     private $error = [];

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class ControllerExtensionPaymentHumm
+ */
 class ControllerExtensionPaymentHumm extends Controller
 {
     const IS_DEBUG = false;
@@ -61,6 +64,7 @@ class ControllerExtensionPaymentHumm extends Controller
             return $this->callbackBadRequest($reference_id, $e->getMessage());
         }
 
+
         $result = $this->updateOrder($order_info, $this->request->post);
 
         $this->response->addHeader('Content-type: application/json');
@@ -85,6 +89,7 @@ class ControllerExtensionPaymentHumm extends Controller
 
             return;
         }
+
 
         $this->updateOrder($order_info, $this->request->get);
 
@@ -185,6 +190,7 @@ class ControllerExtensionPaymentHumm extends Controller
     {
         $order_status_id = $this->model_extension_payment_humm->getStatus($request['x_result']);
 
+        ModelExtensionPaymentHumm::updateLog(sprintf("Status for update web %s  api %s",$order_info['order_status_id'],$request['x_result']),true);
         if ($order_status_id == $order_info['order_status_id']) {
             return;
         }

@@ -4,6 +4,9 @@ const HUMM_VERSION = 'humm_plugin_version_placeholder';
 const HUMM_DESCRIPTION = "Pay in slices. No interest ever.";
 CONST OXIPAY_DESCRIPTION = 'Pay the easier way';
 
+/**
+ * Class ModelExtensionPaymentHumm
+ */
 class ModelExtensionPaymentHumm extends Model
 {
     static public $hummlog=null;
