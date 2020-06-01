@@ -88,17 +88,15 @@ class ControllerExtensionPaymentHumm extends Controller
 
         $this->updateOrder($order_info, $this->request->get);
 
-        // Failed transaction outcome
         if ($this->request->get['x_result'] == 'failed') {
             $this->session->data['error'] = $this->language->get('text_transaction_failed');
             ModelExtensionPaymentHumm::updateLog("End failed transaction..");
 
             $this->response->redirect($this->url->link('checkout/checkout', '', true));
         }
-
-        // Success!
-        $this->response->redirect($this->url->link('checkout/success', '', true));
         ModelExtensionPaymentHumm::updateLog("End Successful transaction..");
+        $this->response->redirect($this->url->link('checkout/success', '', true));
+
     }
 
     /**
