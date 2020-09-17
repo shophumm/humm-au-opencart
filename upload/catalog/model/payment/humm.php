@@ -1,6 +1,6 @@
 <?php
 
-const HUMM_VERSION       = 'humm_plugin_version_placeholder';
+const HUMM_VERSION       = '1.6.1-OC2.2';
 const HUMM_DESCRIPTION   = "Pay in slices. No interest ever.";
 CONST OXIPAY_DESCRIPTION = 'Pay the easier way';
 

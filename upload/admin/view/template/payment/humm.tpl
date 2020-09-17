@@ -43,7 +43,6 @@
                             <div class="col-sm-10">
                                 <select name="humm_title" id="humm-title" class="form-control">
                                     <option value=""><?php echo $text_select; ?></option>
-                                    <option value="Oxipay" <?php echo $humm_title == 'Oxipay' ? ' selected' : ''; ?>>Oxipay</option>
                                     <option value="Humm" <?php echo $humm_title =='Humm' ? ' selected' : ''; ?>>Humm</option>
                                     
                                 </select>
