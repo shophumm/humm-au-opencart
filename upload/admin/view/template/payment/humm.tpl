@@ -17,10 +17,35 @@
             </ul>
         </div>
     </div>
+
+    <div class="container-fluid">
+
+    <div class="humm-header">
+        <div class="humm-payment-logo"></div>
+        <div class="humm-payment-byline">Little things. Big things. Interest freeee!<br/>Humm Payment</div>
+    </div>
+    <div id="humm_simplepath">
+        <div id="simplepath_unsupported">
+            <p><a href="https://docs.shophumm.com.au/ecommerce/opencart/" target="_blank"> Humm NZ OpenCart
+                    Documentation </a></p>
+        </div>
+    </div>
+
+    <div id="humm_simplepath_back">
+        <p>If you don't have a humm merchant account you may join <a href="https://www.shophumm.com/nz/sell-with-humm/"
+                                                                     target="_blank"><span>here</span></a></p>
+    </div>
+    </div>
     <div class="container-fluid">
         <?php if ($error_humm_warning) { ?>
         <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_humm_warning; ?>
             <button type="button" class="close" data-dismiss="alert">&times;</button>
+
+
+
+
+
+
         </div>
         <?php } ?>
         <div class="panel panel-default">
