@@ -107,7 +107,7 @@ html {
     width: 137px;
     height:100px;
     background-repeat: no-repeat, no-repeat, no-repeat;
-    background-image: url(../image/bird-humm.svg);
+    background-image: url(../image/birdhumm.svg);
 }
 .humm-header {
     display: table;

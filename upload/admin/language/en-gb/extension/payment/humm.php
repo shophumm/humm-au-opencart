@@ -6,14 +6,14 @@ $_['heading_title']                = 'Humm';
 $_['text_extension']               = 'Extensions';
 $_['text_success']                 = 'Success: You have modified humm/Oxipay payment module!';
 $_['text_edit']                    = 'Edit';
-$_['text_humm']                    = '<a href="https://shophumm.com.au" target="_blank"><img src="view/image/payment/humm.png" alt="humm" title="humm" /></a>';
+$_['text_humm']                    = '<a href="https://shophumm.co.nz" target="_blank"><img src="view/image/payment/humm.png" alt="humm" title="humm" /></a>';
 
 $_['text_heading_display']         = 'Checkout Method';
 $_['text_heading_shop']            = 'Shop Details';
 $_['text_heading_gateway']         = 'Gateway Settings';
 $_['text_heading_general']         = 'General Settings';
 
-$_['text_description_display']     = 'This allows you to switch between Oxipay and humm. New Zealand merchants should use Oxipay before the official humm launch, and switch this to humm after the launch.';
+$_['text_description_display']     = '';
 $_['text_description_shop']        = 'Enter the shop details for your site.';
 $_['text_description_gateway']     = 'Enter the gateway settings that were supplied to you by humm/Oxipay.';
 
