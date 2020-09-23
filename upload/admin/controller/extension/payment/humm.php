@@ -138,7 +138,7 @@ class ControllerExtensionPaymentHumm extends Controller {
         }
 
         if (
-            $this->request->post['humm_environment'] == 'other'
+            $this->request->post['humm_gateway_environment'] == 'other'
             && preg_match( '@^https://@', $this->request->post['humm_gateway_url'] ) !== 1
         ) {
             $this->error['humm_gateway_url'] = $this->language->get( 'error_gateway_url_format' );
@@ -152,10 +152,10 @@ class ControllerExtensionPaymentHumm extends Controller {
      */
     private function getRegions() {
         return [
-            [
-                'code' => 'AU',
-                'name' => 'Australia',
-            ],
+//            [
+//                'code' => 'AU',
+//                'name' => 'Australia',
+//            ],
             [
                 'code' => 'NZ',
                 'name' => 'New Zealand',
