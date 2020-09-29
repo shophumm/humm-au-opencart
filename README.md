@@ -37,6 +37,8 @@ upload/catalog/view/theme/default/template/product/product.tpl
 admin console
 
 
+change upload/admin/view/template/common/headerHumm.tpl to upload/admin/view/template/common/header.tpl
+
 
 
 
