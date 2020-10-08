@@ -4,7 +4,7 @@ $_['heading_title']                = 'Humm';
 
 // Text
 $_['text_extension']               = 'Extensions';
-$_['text_success']                 = 'Success: You have modified humm/Oxipay payment module!';
+$_['text_success']                 = 'Success: You have modified Humm payment module!';
 $_['text_edit']                    = 'Edit';
 $_['text_humm']                    = '<a href="https://shophumm.co.nz" target="_blank"><img src="view/image/payment/humm.png" alt="humm" title="humm" /></a>';
 
