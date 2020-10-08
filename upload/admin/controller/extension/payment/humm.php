@@ -152,10 +152,10 @@ class ControllerExtensionPaymentHumm extends Controller {
      */
     private function getRegions() {
         return [
-//            [
-//                'code' => 'AU',
-//                'name' => 'Australia',
-//            ],
+            [
+                'code' => 'AU',
+                'name' => 'Australia',
+            ],
             [
                 'code' => 'NZ',
                 'name' => 'New Zealand',

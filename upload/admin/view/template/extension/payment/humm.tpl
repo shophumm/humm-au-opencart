@@ -27,13 +27,13 @@
         </div>
         <div id="humm_simplepath">
             <div id="simplepath_unsupported">
-                <p><a href="https://docs.shophumm.co.nz/ecommerce/opencart/" target="_blank"> Humm NZ OpenCart
+                <p><a href="https://docs.shophumm.com.au/ecommerce/opencart/" target="_blank"> Humm AU OpenCart
                         Documentation </a></p>
             </div>
         </div>
 
         <div id="humm_simplepath_back">
-            <p>If you don't have a humm merchant account you may join <a href="https://www.shophumm.com/nz/sell-with-humm/"
+            <p>If you don't have a humm merchant account you may join <a href="https://www.shophumm.com/au/sell-with-humm/"
                                                                          target="_blank"><span>here</span></a></p>
         </div>
     </div>
