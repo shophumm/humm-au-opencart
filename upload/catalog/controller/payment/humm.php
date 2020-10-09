@@ -1,7 +1,8 @@
 <?php
 
-class ControllerPaymentHumm extends Controller {
-    const IS_DEBUG = false;
+class ControllerPaymentHumm extends Controller
+{
+    const IS_DEBUG = true;
     const HUMM_MINIMUM_PURCHASE = 1;
 
     /**
@@ -9,134 +10,99 @@ class ControllerPaymentHumm extends Controller {
      *
      * @return void
      */
-    public function __construct( $registry ) {
-        parent::__construct( $registry );
+    public function __construct($registry)
+    {
+        parent::__construct($registry);
 
-        $this->load->language( 'payment/humm' );
-        $this->load->model( 'payment/humm' );
-        $this->load->model( 'checkout/order' );
+        $this->load->language('payment/humm');
+        $this->load->model('payment/humm');
+        $this->load->model('checkout/order');
     }
 
     /**
      * @return string
      */
-    public function index() {
-        if ( $this->cart->getTotal() >= static::HUMM_MINIMUM_PURCHASE ) {
-            $data['button_confirm'] = $this->language->get( 'button_confirm' );
+    public function index()
+    {
 
-            $data['text_loading'] = $this->language->get( 'text_loading' );
+        if ($this->cart->getTotal() >= static::HUMM_MINIMUM_PURCHASE) {
+            $this->data['button_confirm'] = $this->language->get('button_confirm');
 
-            $data['params'] = $this->model_payment_humm->getParams();
+            $this->data['text_loading'] = $this->language->get('text_loading');
 
-            $data['action'] = $this->model_payment_humm->getGatewayUrl();
+            $this->data['params'] = $this->model_payment_humm->getParams();
+
+            $this->data['action'] = $this->model_payment_humm->getGatewayUrl();
+
         } else {
-            $data['error'] = sprintf( $this->language->get( 'error_amount' ), $this->currency->format( static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1 ) );
+            $this->data['error'] = sprintf($this->language->get('error_amount'), $this->currency->format(static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1));
         }
-        if ( version_compare( VERSION, '2.2.0.0', '>=' ) ) {
+        if (version_compare(VERSION, '2.2.0.0', '>=')) {
             $tpl_path = 'payment/humm';
         } else {
-            $tpl_path = $this->config->get( 'config_template' ) . '/template/' . 'payment/humm' . '.tpl';
+            $tpl_path = $this->config->get('config_template') . '/template/' . 'payment/humm' . '.tpl';
         }
 
-        return $this->load->view( $tpl_path, $data );
+
+        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/humm.tpl')) {
+            $this->template = $this->config->get('config_template') . '/template/payment/humm.tpl';
+        } else {
+            $this->template = 'default/template/payment/humm.tpl';
+        }
+        $this->render();
     }
 
     /**
      * @return void
      */
-    public function callback() {
-        $this->debugLogIncoming( 'Callback' );
+    public function callback()
+    {
+        $this->debugLogIncoming('Callback');
 
         // Validate Response
         try {
-            $order_info = $this->getOrderAndVerifyResponse( $this->request->post );
-        } catch ( \Exception $e ) {
-            // Handle callback error
+            $order_info = $this->getOrderAndVerifyResponse($this->request->post);
+        } catch (\Exception $e) {
             $reference_id = "";
-            if ( isset( $this->request->post['x_reference'] ) ) {
+            if (isset($this->request->post['x_reference'])) {
                 $reference_id = $this->request->post['x_reference'];
             }
-
-            return $this->callbackBadRequest( $reference_id, $e->getMessage() );
+            return $this->callbackBadRequest($reference_id, $e->getMessage());
         }
 
-        $result = $this->updateOrder( $order_info, $this->request->post );
-
-        $this->response->addHeader( 'Content-type: application/json' );
-        $this->response->setOutput( json_encode( [
+        $result = $this->updateOrder($order_info, $this->request->post);
+        $this->response->addHeader('Content-type: application/json');
+        $this->response->setOutput(json_encode([
             'reference_id' => $this->request->post['x_reference'],
-            'status'       => $result
-        ] ) );
+            'status' => $result
+        ]));
     }
 
     /**
-     * @return void
+     * @param string $type
      */
-    public function complete() {
-        $this->debugLogIncoming( 'Complete' );
-
-        // Validate Response
-        try {
-            $order_info = $this->getOrderAndVerifyResponse( $this->request->get );
-        } catch ( \Exception $e ) {
-            // Give the customer a general error
-            $this->session->data['error'] = $this->language->get( 'text_transaction_verification' );
-
-            $this->response->redirect( $this->url->link( 'checkout/checkout', '', true ) );
-
-            return;
+    private function debugLogIncoming($type, $data = null)
+    {
+        if (static::IS_DEBUG) {
+            if ($type == 'data') {
+                $this->log->write('Humm-Data:' . $type . 'Debug' . var_export($data, true));
+            } else {
+                $str = var_export([
+                    'get' => $_GET,
+                    'post' => $_POST,
+                ], true);
+                $this->log->write('Humm ' . $type . ' Debug:  ' . $str);
+            }
         }
-
-        $this->updateOrder( $order_info, $this->request->get );
-
-        // Failed transaction outcome
-        if ( $this->request->get['x_result'] == 'failed' ) {
-            $this->session->data['error'] = $this->language->get( 'text_transaction_failed' );
-
-            $this->response->redirect( $this->url->link( 'checkout/checkout', '', true ) );
-        }
-
-        // Success!
-        $this->response->redirect( $this->url->link( 'checkout/success', '', true ) );
     }
 
     /**
-     * @return void
-     */
-    public function cancel() {
-        $this->debugLogIncoming( 'Cancel' );
-
-        $this->session->data['error'] = $this->language->get( 'text_transaction_cancelled' );
-
-        $this->response->redirect( $this->url->link( 'checkout/checkout', '', true ) );
-    }
-
-    /**
-     * @param string $comment
-     *
-     * @return void
-     */
-    private function callbackBadRequest( $reference_id, $comment ) {
-        $params = [];
-
-        foreach ( $this->request->post as $key => $value ) {
-            $params[] = $key . '=' . $value;
-        }
-
-        $this->log->write( 'Humm Error: ' . $comment . ' (' . implode( '; ', $params ) . ')' );
-
-        $this->response->addHeader( $this->request->server['SERVER_PROTOCOL'] . ' 400 Bad Request' );
-
-        $this->response->addHeader( 'Content-type: application/json' );
-        $this->response->setOutput( json_encode( [ "reference_id" => $reference_id, "status" => $comment ] ) );
-    }
-
-    /**
-     * @param mixed[] $request
-     *
+     * @param $request
      * @return mixed
+     * @throws Exception
      */
-    private function getOrderAndVerifyResponse( $request ) {
+    private function getOrderAndVerifyResponse($request)
+    {
         $required = [
             'x_account_id',
             'x_reference',
@@ -147,43 +113,63 @@ class ControllerPaymentHumm extends Controller {
             'x_timestamp',
             'x_result',
         ];
-
-        // if an item exists(and is not empty) in $request, remove it from the $required array 
-        // $required should be empty by the end to indicate all required items have been provided. 
-        foreach ( $required as $seq => $value ) {
-            if ( isset( $request[ $value ] ) && ! empty( $request[ $value ] ) ) {
-                unset( $required[ $seq ] );
+        foreach ($required as $seq => $value) {
+            if (isset($request[$value]) && !empty($request[$value])) {
+                unset($required[$seq]);
             }
         }
-
-        if ( ! empty( $required ) ) {
-            throw new \Exception( 'Bad Request. Missing required fields: ' . implode( ', ', $required ) . '.' );
+        if (!empty($required)) {
+            throw new \Exception('Bad Request. Missing required fields: ' . implode(', ', $required) . '.');
         }
-
         // Validate Signature
-        if ( ! $this->model_payment_humm->validateSignature( $request ) ) {
-            throw new \Exception( 'Bad Request. Unable to validate signature.' );
+        if (!$this->model_payment_humm->validateSignature($request)) {
+            throw new \Exception('Bad Request. Unable to validate signature.');
         }
-
-        $order_info = $this->model_checkout_order->getOrder( $request['x_reference'] );
-
+        $order_info = $this->model_checkout_order->getOrder($request['x_reference']);
         // Order Exists
-        if ( empty( $order_info ) ) {
-            throw new \Exception( 'Bad Request. Invalid Order ID.' );
+        if (empty($order_info)) {
+            throw new \Exception('Bad Request. Invalid Order ID.');
         }
 
         return $order_info;
     }
 
     /**
-     * @param mixed[] $request
+     * @param string $comment
+     *
+     * @return void
      */
-    private function updateOrder( $order_info, $request ) {
-        $order_status_id = $this->model_payment_humm->getStatus( $request['x_result'] );
+    private function callbackBadRequest($reference_id, $comment)
+    {
+        $params = [];
 
-        if ( $order_status_id == $order_info['order_status_id'] ) {
+        foreach ($this->request->post as $key => $value) {
+            $params[] = $key . '=' . $value;
+        }
+
+        $this->log->write('Humm Error: ' . $comment . ' (' . implode('; ', $params) . ')');
+
+        $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 400 Bad Request');
+
+        $this->response->addHeader('Content-type: application/json');
+        $this->response->setOutput(json_encode(["reference_id" => $reference_id, "status" => $comment]));
+    }
+
+    /**
+     * @param $order_info
+     * @param $request
+     */
+    private function updateOrder($order_info, $request)
+    {
+
+        $order_status_id = $this->model_payment_humm->getStatus($request['x_result']);
+
+        if ($order_status_id == $order_info['order_status_id']) {
             return;
         }
+
+        $this->debugLogIncoming('data', $order_info);
+        $this->debugLogIncoming('data', $order_status_id);
 
         $comment = '';
         $comment .= 'Test: ' . $request['x_test'] . "\n";
@@ -192,24 +178,50 @@ class ControllerPaymentHumm extends Controller {
         $comment .= 'Gateway Reference: ' . $request['x_gateway_reference'] . "\n";
         $comment .= 'Amount: ' . $request['x_amount'] . "\n";
         $comment .= 'Currency: ' . $request['x_currency'] . "\n";
-        $comment = strip_tags( $comment );
+        $comment = strip_tags($comment);
 
-        $this->model_checkout_order->addOrderHistory( $order_info['order_id'], $order_status_id, $comment, false );
+        $this->model_checkout_order->confirm($order_info['order_id'], $order_status_id);
+
+        $this->model_checkout_order->update($order_info['order_id'], $order_status_id, $comment, false);
 
         return $request['x_result'];
     }
 
     /**
-     * @param string $type
+     * @return void
      */
-    private function debugLogIncoming( $type ) {
-        if ( static::IS_DEBUG ) {
-            $str = var_export( [
-                'get'  => $_GET,
-                'post' => $_POST,
-            ], true );
+    public function complete()
+    {
+        $this->debugLogIncoming('Complete');
+        try {
+            $order_info = $this->getOrderAndVerifyResponse($this->request->get);
+        } catch (\Exception $e) {
+            // Give the customer a general error
+            $this->session->data['error'] = $this->language->get('text_transaction_verification');
 
-            $this->log->write( 'Humm ' . $type . ' Debug: ' . $str );
+            $this->response->redirect($this->url->link('checkout/checkout', '', true));
+            return;
         }
+        $this->updateOrder($order_info, $this->request->get);
+        if ($this->request->get['x_result'] == 'failed') {
+            $this->session->data['error'] = $this->language->get('text_transaction_failed');
+
+            $this->response->redirect($this->url->link('checkout/checkout', '', true));
+        }
+
+        // Success!
+        $this->response->redirect($this->url->link('checkout/success', '', true));
+    }
+
+    /**
+     * @return void
+     */
+    public function cancel()
+    {
+        $this->debugLogIncoming('Cancel');
+
+        $this->session->data['error'] = $this->language->get('text_transaction_cancelled');
+
+        $this->response->redirect($this->url->link('checkout/checkout', '', true));
     }
 }

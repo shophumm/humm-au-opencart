@@ -1,161 +1,253 @@
 <?php
 
-class ControllerPaymentHumm extends Controller {
+/**
+ * Class ControllerPaymentHumm
+ */
+
+class ControllerPaymentHumm extends Controller
+{
     private $error = [];
 
     /**
      * @return string
      */
-    public function index() {
-        $language_data = $this->load->language( 'payment/humm' );
+    public function index()
+    {
+        $this->load->language('payment/humm');
 
-        $this->document->setTitle( $this->language->get( 'heading_title' ) );
+        $this->document->setTitle($this->language->get('heading_title'));
 
-        $this->load->model( 'setting/setting' );
+        $this->load->model('setting/setting');
 
-        if ( ( $this->request->server['REQUEST_METHOD'] == 'POST' ) && $this->validate() ) {
-            $this->model_setting_setting->editSetting( 'humm', $this->request->post );
+        if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+            $this->model_setting_setting->editSetting('humm', $this->request->post);
 
-            $this->session->data['success'] = $this->language->get( 'text_success' );
+            $this->session->data['success'] = $this->language->get('text_success');
 
-            $this->response->redirect( $this->url->link( 'extension/payment', 'token=' . $this->session->data['token'] . '&type=payment', true ) );
+            $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
 
-        // Error Strings
-        $keys = [
-            'humm_warning',
-            'humm_region',
-            'humm_gateway_environment',
-            'humm_gateway_url',
-            'humm_merchant_id',
-            'humm_api_key',
-        ];
+        $this->data['heading_title'] = $this->language->get('heading_title');
 
-        foreach ( $keys as $key ) {
-            if ( isset( $this->error[ $key ] ) ) {
-                $data[ 'error_' . $key ] = $this->error[ $key ];
-            } else {
-                $data[ 'error_' . $key ] = '';
-            }
-        }
+        $this->data['text_enabled'] = $this->language->get('text_enabled');
+        $this->data['text_disabled'] = $this->language->get('text_disabled');
+        $this->data['text_all_zones'] = $this->language->get('text_all_zones');
+        $this->data['text_test'] = $this->language->get('text_test');
+        $this->data['text_live'] = $this->language->get('text_live');
+        $this->data['text_payment'] = $this->language->get('text_payment');
+        $this->data['text_capture'] = $this->language->get('text_capture');
+        $this->data['text_authenticate'] = $this->language->get('text_authenticate');
+        $this->data['text_nz'] = $this->language->get('text_nz');
+        $this->data['text_au'] = $this->language->get('text_au');
 
-        // Language Strings
-        foreach ( $language_data as $key => $value ) {
-            $data[ $key ] = $value;
-        }
+        $this->data['entry_merchantNo'] = $this->language->get('entry_merchantNo');
+        $this->data['entry_apikey'] = $this->language->get('entry_apikey');
+        $this->data['entry_gateway'] = $this->language->get('entry_gateway');
+        $this->data['entry_test'] = $this->language->get('entry_test');
+        $this->data['entry_title'] = $this->language->get('entry_title');
+        $this->data['entry_transaction'] = $this->language->get('entry_transaction');
+        $this->data['entry_total'] = $this->language->get('entry_total');
+        $this->data['entry_order_status'] = $this->language->get('entry_order_status');
+        $this->data['entry_order_status_pending'] = $this->language->get('entry_order_status_pending');
+        $this->data['entry_order_status_completed'] = $this->language->get('entry_order_status_completed');
+        $this->data['entry_order_status_failed'] = $this->language->get('entry_order_status_failed');
+        $this->data['entry_geo_zone'] = $this->language->get('entry_geo_zone');
+        $this->data['entry_status'] = $this->language->get('entry_status');
+        $this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 
-        // Breadcrumbs
-        $data['breadcrumbs'] = [
-            [
-                'text' => $this->language->get( 'text_home' ),
-                'href' => $this->url->link( 'common/dashboard', 'token=' . $this->session->data['token'], true ),
-            ],
-            [
-                'text' => $this->language->get( 'text_extension' ),
-                'href' => $this->url->link( 'extension/payment', 'token=' . $this->session->data['token'] . '&type=payment', true ),
-            ],
-            [
-                'text' => $this->language->get( 'heading_title' ),
-                'href' => $this->url->link( 'payment/humm', 'token=' . $this->session->data['token'], true ),
-            ],
-        ];
+        $this->data['button_save'] = $this->language->get('button_save');
+        $this->data['button_cancel'] = $this->language->get('button_cancel');
 
-        // Actions / Links
-        $data['action'] = $this->url->link( 'payment/humm', 'token=' . $this->session->data['token'], true );
-        $data['cancel'] = $this->url->link( 'extension/payment', 'token=' . $this->session->data['token'] . '&type=payment', true );
+        $this->data['tab_general'] = $this->language->get('tab_general');
 
-        // Dropdown Data
-        $this->load->model( 'localisation/geo_zone' );
-        $this->load->model( 'localisation/order_status' );
-
-        $data['geo_zones']            = $this->model_localisation_geo_zone->getGeoZones();
-        $data['order_statuses']       = $this->model_localisation_order_status->getOrderStatuses();
-        $data['regions']              = $this->getRegions();
-        $data['gateway_environments'] = $this->getGatewayEnvironments();
-
-        // Form Values
-        $keys = [
-            'humm_title',
-            'humm_shop_name',
-            'humm_region',
-            'humm_gateway_environment',
-            'humm_gateway_url',
-            'humm_merchant_id',
-            'humm_api_key',
-            'humm_order_status_completed_id',
-            'humm_order_status_pending_id',
-            'humm_order_status_failed_id',
-            'humm_geo_zone_id',
-            'humm_status',
-            'humm_sort_order',
-        ];
-
-        $defaults = [
-            'humm_title'                     => 'Humm',
-            'humm_order_status_completed_id' => 5,
-            'humm_order_status_pending_id'   => 1,
-            'humm_order_status_failed_id'    => 10,
-        ];
-
-        foreach ( $keys as $key ) {
-            if ( isset( $this->request->post[ $key ] ) ) {
-                $data[ $key ] = $this->request->post[ $key ];
-            } else if ( ! $this->config->has( $key ) && isset( $defaults[ $key ] ) ) {
-                $data[ $key ] = $defaults[ $key ];
-            } else {
-                $data[ $key ] = $this->config->get( $key );
-            }
-        }
-
-        // Layout
-        $data['header']      = $this->load->controller( 'common/header' );
-        $data['column_left'] = $this->load->controller( 'common/column_left' );
-        $data['footer']      = $this->load->controller( 'common/footer' );
-
-        // Render Output
-        if ( version_compare( VERSION, '2.2.0.0', '>=' ) ) {
-            $tpl_path = 'payment/humm';
+        if (isset($this->error['warning'])) {
+            $this->data['error_warning'] = $this->error['warning'];
         } else {
-            $tpl_path = 'payment/humm' . '.tpl';
+            $this->data['error_warning'] = '';
         }
-        $this->response->setOutput( $this->load->view( $tpl_path, $data ) );
+
+        if (isset($this->error['error_humm'])) {
+            $this->data['error_humm'] = $this->error['error_humm'];
+        } else {
+            $this->data['error_humm'] = '';
+        }
+
+        if (isset($this->error['password'])) {
+            $this->data['error_password'] = $this->error['password'];
+        } else {
+            $this->data['error_password'] = '';
+        }
+
+        $this->data['breadcrumbs'] = array();
+
+        $this->data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_home'),
+            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+            'separator' => false
+        );
+
+        $this->data['breadcrumbs'][] = array(
+            'text' => $this->language->get('text_payment'),
+            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
+            'separator' => ' :: '
+        );
+
+        $this->data['breadcrumbs'][] = array(
+            'text' => $this->language->get('heading_title'),
+            'href' => $this->url->link('payment/humm', 'token=' . $this->session->data['token'], 'SSL'),
+            'separator' => ' :: '
+        );
+
+        $this->data['action'] = $this->url->link('payment/humm', 'token=' . $this->session->data['token'], 'SSL');
+
+        $this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+
+        if (isset($this->request->post['humm_merchantNo'])) {
+            $this->data['humm_merchantNo'] = $this->request->post['humm_merchantNo'];
+        } else {
+            $this->data['humm_merchantNo'] = $this->config->get('humm_merchantNo');
+        }
+
+        if (isset($this->request->post['humm_apikey'])) {
+            $this->data['humm_apikey'] = $this->request->post['humm_apikey'];
+        } else {
+            $this->data['humm_apikey'] = $this->config->get('humm_apikey');
+        }
+
+
+        if (isset($this->request->post['humm_gateway_environment'])) {
+            $this->data['humm_gateway_environment'] = $this->request->post['humm_gateway_environment'];
+        } else {
+            $this->data['humm_gateway_environment'] = $this->config->get('humm_gateway_environment');
+        }
+
+
+        if (isset($this->request->post['humm_test'])) {
+            $this->data['humm_test'] = $this->request->post['humm_test'];
+        } else {
+            $this->data['humm_test'] = $this->config->get('humm_test');
+        }
+
+        if (isset($this->request->post['humm_transaction'])) {
+            $this->data['humm_transaction'] = $this->request->post['humm_transaction'];
+        } else {
+            $this->data['humm_transaction'] = $this->config->get('humm_transaction');
+        }
+
+        if (isset($this->request->post['humm_total'])) {
+            $this->data['humm_total'] = $this->request->post['humm_total'];
+        } else {
+            $this->data['humm_total'] = $this->config->get('humm_total');
+        }
+
+        if (isset($this->request->post['humm_title'])) {
+            $this->data['humm_title'] = $this->request->post['humm_title'];
+        } else {
+            $this->data['humm_title'] = $this->config->get('humm_title');
+        }
+
+        if (isset($this->request->post['humm_order_status_id'])) {
+            $this->data['humm_order_status_id'] = $this->request->post['humm_order_status_id'];
+        } else {
+            $this->data['humm_order_status_id'] = $this->config->get('humm_order_status_id');
+        }
+
+        if (isset($this->request->post['humm_order_status_completed'])) {
+            $this->data['humm_order_status_completed'] = $this->request->post['humm_order_status_completed'];
+        } else {
+            $this->data['humm_order_status_completed'] = $this->config->get('humm_order_status_completed');
+        }
+
+        if (isset($this->request->post['humm_order_status_pending'])) {
+            $this->data['humm_order_status_pending'] = $this->request->post['humm_order_status_pending'];
+        } else {
+            $this->data['humm_order_status_pending'] = $this->config->get('humm_order_status_pending');
+        }
+
+        if (isset($this->request->post['humm_order_status_failed'])) {
+            $this->data['humm_order_status_failed'] = $this->request->post['humm_order_status_failed'];
+        } else {
+            $this->data['humm_order_status_failed'] = $this->config->get('humm_order_status_failed');
+        }
+
+
+        $this->load->model('localisation/order_status');
+
+        $this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+
+
+        $this->data['humm_region'] = $this->getRegions();
+        $this->data['humm_title_show'] = $this->getTitle();
+
+        $this->data['humm_env'] = $this->getGatewayEnvironments();
+
+
+        if (isset($this->request->post['humm_geo_zone_id'])) {
+            $this->data['humm_geo_zone_id'] = $this->request->post['humm_geo_zone_id'];
+        } else {
+            $this->data['humm_geo_zone_id'] = $this->config->get('humm_geo_zone_id');
+        }
+
+        $this->load->model('localisation/geo_zone');
+
+        $this->data['geo_zones'] = $this->model_localisation_geo_zone->getGeoZones();
+
+        if (isset($this->request->post['humm_status'])) {
+            $this->data['humm_status'] = $this->request->post['humm_status'];
+        } else {
+            $this->data['humm_status'] = $this->config->get('humm_status');
+        }
+
+        if (isset($this->request->post['humm_sort_order'])) {
+            $this->data['humm_sort_order'] = $this->request->post['humm_sort_order'];
+        } else {
+            $this->data['humm_sort_order'] = $this->config->get('humm_sort_order');
+        }
+
+        $this->template = 'payment/humm.tpl';
+        $this->children = array(
+            'common/header',
+            'common/footer',
+        );
+        $this->response->setOutput($this->render());
     }
 
     /**
      * @return bool
      */
-    protected function validate() {
-        if ( ! $this->user->hasPermission( 'modify', 'extension/payment' ) ) { // QUESTION: "payment/humm" and "extension/payment" both works here
-            $this->error['humm_warning'] = $this->language->get( 'error_permission' );
+    protected function validate()
+    {
+        if (!$this->user->hasPermission('modify', 'extension/payment')) {
+            $this->error['humm_warning'] = $this->language->get('error_permission');
         }
 
         $keys = [
-            'humm_title'       => 'Title',
-            'humm_region'      => 'Region',
-            'humm_merchant_id' => 'Merchant ID',
-            'humm_api_key'     => 'API Key',
+            'humm_title' => 'Title',
+            'humm_merchantNo' => 'Merchant ID',
+            'humm_apikey' => 'API Key',
         ];
 
-        foreach ( $keys as $key => $name ) {
-            if ( ! isset( $this->request->post[ $key ] ) || empty( $this->request->post[ $key ] ) ) {
-                $this->error[ $key ] = sprintf( $this->language->get( 'error_required' ), $name );
+        foreach ($keys as $key => $name) {
+            if (!isset($this->request->post[$key]) || empty($this->request->post[$key])) {
+                $this->error[$key] = sprintf($this->language->get('error_required'), $name);
             }
         }
 
         if (
             $this->request->post['humm_gateway_environment'] == 'other'
-            && preg_match( '@^https://@', $this->request->post['humm_gateway_url'] ) !== 1
+            && preg_match('@^https://@', $this->request->post['humm_gateway_url']) !== 1
         ) {
-            $this->error['humm_gateway_url'] = $this->language->get( 'error_gateway_url_format' );
+            $this->error['humm_gateway_url'] = $this->language->get('error_gateway_url_format');
         }
 
-        return ! $this->error;
+        return !$this->error;
     }
 
     /**
      * @return mixed[]
      */
-    private function getRegions() {
+    private function getRegions()
+    {
         return [
             [
                 'code' => 'AU',
@@ -171,7 +263,8 @@ class ControllerPaymentHumm extends Controller {
     /**
      * @return mixed[]
      */
-    private function getGatewayEnvironments() {
+    private function getGatewayEnvironments()
+    {
         return [
             [
                 'code' => 'sandbox',
@@ -187,4 +280,23 @@ class ControllerPaymentHumm extends Controller {
             ],
         ];
     }
+
+    /**
+     *
+     */
+
+    private function getTitle()
+    {
+        return [
+            [
+                'code' => 'AU',
+                'name' => 'HUMM AU',
+            ],
+            [
+                'code' => 'NZ',
+                'name' => 'HUMM NZ',
+            ],
+        ];
+    }
+
 }
