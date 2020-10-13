@@ -1,5 +1,5 @@
 <?php
-const HUMM_VERSION = '1.6.1-OC1.5';
+const HUMM_VERSION = '1.6.1-OC1.3';
 const HUMM_DESCRIPTION = "Pay in slices. No interest ever.";
 
 /**
@@ -17,31 +17,38 @@ class ModelPaymentHumm extends Model
     const IS_DEBUG = true;
     const HUMM_MINIMUM_PURCHASE = 1;
 
-    public function getMethod($address, $total)
+    public function getMethod($country_id, $zone_id)
     {
+        $this->load->language('payment/humm');
 
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('humm_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+
+        if ($this->config->get('humm_status')) {
+            $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('humm_geo_zone_id') . "' AND country_id = '" . (int)$country_id . "' AND (zone_id = '" . (int)$zone_id . "' OR zone_id = '0')");
 
 
-        $status = false;
-        if (!$this->config->get('humm_geo_zone_id')) {
-            $status = true;
-        } elseif ($query->num_rows) {
-            $status = true;
+            if (!$this->config->get('humm_geo_zone_id')) {
+                $status = TRUE;
+            } elseif ($query->num_rows) {
+                $status = TRUE;
+            } else {
+                $status = FALSE;
+            }
+        } else {
+            $status = FALSE;
         }
-
         $method_data = [];
         if ($status) {
             $method_data = [
-                'code' => 'humm',
+                'id' => 'humm',
                 'title' => 'HUMM-' . $this->config->get('humm_title'),
                 'sort_order' => $this->config->get('humm_sort_order'),
             ];
         }
-        if (floatval($total) > $this->config->get('humm_total'))
+        if ($this->cart->getTotal() > floatval($this->config->get('humm_total'))) {
             return $method_data;
-        else
+        } else {
             return [];
+        }
     }
 
     /**
@@ -95,24 +102,24 @@ class ModelPaymentHumm extends Model
         $this->load->model('checkout/order');
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $payment_country_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE country_id = '" . (int)$order_info['payment_country_id'] . "' AND status = 1 LIMIT 1")->row;
-        $payment_zone_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int)$order_info['payment_zone_id'] . "' AND status = 1 AND country_id = '" . (int)$order_info['payment_country_id'] . "' LIMIT 1")->row;
+        $payment_country_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE country_id = '" . (int)$order_info['payment_country_id'] . "' LIMIT 1")->row;
+        $payment_zone_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int)$order_info['payment_zone_id'] . "' AND country_id = '" . (int)$order_info['payment_country_id'] . "' LIMIT 1")->row;
 
-        $shipping_country_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE country_id = '" . (int)$order_info['shipping_country_id'] . "' AND status = 1 LIMIT 1")->row;
-        $shipping_zone_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int)$order_info['shipping_zone_id'] . "' AND status = 1 AND country_id = '" . (int)$order_info['shipping_country_id'] . "' LIMIT 1")->row;
+        $shipping_country_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE country_id = '" . (int)$order_info['shipping_country_id'] . "' LIMIT 1")->row;
+        $shipping_zone_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int)$order_info['shipping_zone_id'] . "'  AND country_id = '" . (int)$order_info['shipping_country_id'] . "' LIMIT 1")->row;
 
         $params = [
             // Required
             'x_account_id' => $this->config->get('humm_merchantNo'),
-            'x_amount' => $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false),
-            'x_currency' => $order_info['currency_code'],
+            'x_amount' => $this->currency->format($order_info['total'], $order_info['currency'], $order_info['value'], false),
+            'x_currency' => $order_info['currency'],
             'x_reference' => $this->session->data['order_id'],
             'x_shop_country' => $this->config->get('humm_title'),
             'x_shop_name' => $this->config->get('humm_shop_name'),
             'x_test' => 'false',
-            'x_url_callback' => $this->url->link('payment/humm/callback', '', true),
-            'x_url_cancel' => $this->url->link('payment/humm/cancel', '', true),
-            'x_url_complete' => $this->url->link('payment/humm/complete', '', true),
+            'x_url_callback' => $this->url->https('payment/humm/callback', '', true),
+            'x_url_cancel' => $this->url->https('payment/humm/cancel', '', true),
+            'x_url_complete' => $this->url->https('payment/humm/complete', '', true),
 
             // Optional
             'x_customer_first_name' => $order_info['payment_firstname'],
@@ -128,14 +135,13 @@ class ModelPaymentHumm extends Model
             'x_customer_shipping_first_name' => $order_info['shipping_firstname'],
             'x_customer_shipping_last_name' => $order_info['shipping_lastname'],
             'x_customer_shipping_address1' => $order_info['shipping_address_1'],
-//          'x_customer_shipping_address2' => '',
             'x_customer_shipping_address2' => $order_info['shipping_address_2'],
             'x_customer_shipping_city' => $order_info['shipping_city'],
             'x_customer_shipping_state' => '',
             'x_customer_shipping_postcode' => $order_info['shipping_postcode'],
             'x_customer_shipping_country' => '',
             'x_description' => 'Order #' . $order_info['order_id'],
-            'version_info' => 'Humm_' . HUMM_VERSION . '_on_OC_' . substr(VERSION, 0, 3),
+            'version_info' => 'Humm_' . HUMM_VERSION . '_on_OC_' . '1.3.4',
         ];
 
         if ($payment_country_info) {
@@ -156,8 +162,7 @@ class ModelPaymentHumm extends Model
 
         $params['x_signature'] = $this->getSignature($params);
 
-        $this->debugLogIncoming('data-payload', $params);
-
+        $this->debugLogIncoming('data-payload--', $params);
 
         return $params;
     }
@@ -195,17 +200,14 @@ class ModelPaymentHumm extends Model
      */
     public function getGatewayUrl()
     {
-        $environment = $this->config->get('humm_gateway_environment');
-        if ($environment == 'other') {
-            return $this->config->get('humm_gateway_url');
+        if (preg_match('@^https://@', $this->config->get('humm_gateway_environment')) == 1) {
+            return $this->config->get('humm_gateway_environment');
         }
-        if (preg_match('@^https://@', $this->config->get('humm_gateway_url')) !== 1)
-        {
-            return $this->config->get('humm_gateway_url');
-        }
-        $region = $this->config->get('humm_region');
+        $environment = $this->config->get('humm_test');
+
+        $region = $this->config->get('humm_title');
         $country_domain = ($region == 'NZ') ? 'co.nz' : 'com.au';
-        $title = $this->config->get('humm_title');
+
         $domainsTest = array(
             'AU' => 'integration-cart.shophumm.',
             'NZ' => 'securesandbox.oxipay.'
@@ -214,7 +216,7 @@ class ModelPaymentHumm extends Model
             'AU' => 'cart.shophumm.',
             'NZ' => 'secure.oxipay.'
         );
-        return 'https://' . ($environment == 'live' ? $domains[$title] : $domainsTest[$title]) . $country_domain . '/Checkout?platform=Default';
+        return 'https://' . ($environment == 'live' ? $domains[$region] : $domainsTest[$region]) . $country_domain . '/Checkout?platform=Default';
     }
 
     /**

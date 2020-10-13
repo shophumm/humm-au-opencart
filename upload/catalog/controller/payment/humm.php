@@ -6,13 +6,10 @@ class ControllerPaymentHumm extends Controller
     const HUMM_MINIMUM_PURCHASE = 1;
 
     /**
-     * @param object $registry
-     *
-     * @return void
+     * ControllerPaymentHumm constructor.
      */
-    public function __construct($registry)
+    public function __construct()
     {
-        parent::__construct($registry);
 
         $this->load->language('payment/humm');
         $this->load->model('payment/humm');
@@ -37,12 +34,8 @@ class ControllerPaymentHumm extends Controller
         } else {
             $this->data['error'] = sprintf($this->language->get('error_amount'), $this->currency->format(static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1));
         }
-        if (version_compare(VERSION, '2.2.0.0', '>=')) {
-            $tpl_path = 'payment/humm';
-        } else {
-            $tpl_path = $this->config->get('config_template') . '/template/' . 'payment/humm' . '.tpl';
-        }
 
+        $this->id = 'payment';
 
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/humm.tpl')) {
             $this->template = $this->config->get('config_template') . '/template/payment/humm.tpl';
@@ -71,7 +64,7 @@ class ControllerPaymentHumm extends Controller
         }
 
         $result = $this->updateOrder($order_info, $this->request->post);
-        $this->response->addHeader('Content-type: application/json');
+        $this->response->addHeader('Content-type', 'application/json');
         $this->response->setOutput(json_encode([
             'reference_id' => $this->request->post['x_reference'],
             'status' => $result
@@ -85,7 +78,7 @@ class ControllerPaymentHumm extends Controller
     {
         if (static::IS_DEBUG) {
             if ($type == 'data') {
-                $this->log->write('Humm-Data:' . $type . 'Debug' . var_export($data, true));
+                $this->log->write('Humm-Data-update:' . $type . 'Debug' . var_export($data, true));
             } else {
                 $str = var_export([
                     'get' => $_GET,
@@ -148,9 +141,7 @@ class ControllerPaymentHumm extends Controller
         }
 
         $this->log->write('Humm Error: ' . $comment . ' (' . implode('; ', $params) . ')');
-
         $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 400 Bad Request');
-
         $this->response->addHeader('Content-type: application/json');
         $this->response->setOutput(json_encode(["reference_id" => $reference_id, "status" => $comment]));
     }
@@ -169,7 +160,6 @@ class ControllerPaymentHumm extends Controller
         }
 
         $this->debugLogIncoming('data', $order_info);
-        $this->debugLogIncoming('data', $order_status_id);
 
         $comment = '';
         $comment .= 'Test: ' . $request['x_test'] . "\n";
@@ -199,18 +189,16 @@ class ControllerPaymentHumm extends Controller
             // Give the customer a general error
             $this->session->data['error'] = $this->language->get('text_transaction_verification');
 
-            $this->response->redirect($this->url->link('checkout/checkout', '', true));
+            $this->response->redirect($this->url->https('checkout/cart', '', true));
             return;
         }
         $this->updateOrder($order_info, $this->request->get);
         if ($this->request->get['x_result'] == 'failed') {
-            $this->session->data['error'] = $this->language->get('text_transaction_failed');
-
-            $this->response->redirect($this->url->link('checkout/checkout', '', true));
+            $this->response->redirect($this->url->https('checkout/cart', '', true));
         }
 
         // Success!
-        $this->response->redirect($this->url->link('checkout/success', '', true));
+        $this->response->redirect($this->url->https('checkout/success', '', true));
     }
 
     /**
@@ -219,9 +207,6 @@ class ControllerPaymentHumm extends Controller
     public function cancel()
     {
         $this->debugLogIncoming('Cancel');
-
-        $this->session->data['error'] = $this->language->get('text_transaction_cancelled');
-
-        $this->response->redirect($this->url->link('checkout/checkout', '', true));
+        $this->response->redirect($this->url->https('checkout/cart', '', true));
     }
 }

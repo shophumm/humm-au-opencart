@@ -7,7 +7,6 @@
 class ControllerPaymentHumm extends Controller
 {
     private $error = [];
-
     /**
      * @return string
      */
@@ -15,7 +14,7 @@ class ControllerPaymentHumm extends Controller
     {
         $this->load->language('payment/humm');
 
-        $this->document->setTitle($this->language->get('heading_title'));
+        $this->document->title = $this->language->get('heading_title');
 
         $this->load->model('setting/setting');
 
@@ -23,10 +22,8 @@ class ControllerPaymentHumm extends Controller
             $this->model_setting_setting->editSetting('humm', $this->request->post);
 
             $this->session->data['success'] = $this->language->get('text_success');
-
-            $this->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
+            $this->redirect($this->url->https('extension/payment'));
         }
-
         $this->data['heading_title'] = $this->language->get('heading_title');
 
         $this->data['text_enabled'] = $this->language->get('text_enabled');
@@ -82,25 +79,25 @@ class ControllerPaymentHumm extends Controller
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_home'),
-            'href' => $this->url->link('common/home', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->https('common/home'),
             'separator' => false
         );
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('text_payment'),
-            'href' => $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->https('extension/payment'),
             'separator' => ' :: '
         );
 
         $this->data['breadcrumbs'][] = array(
             'text' => $this->language->get('heading_title'),
-            'href' => $this->url->link('payment/humm', 'token=' . $this->session->data['token'], 'SSL'),
+            'href' => $this->url->https('payment/humm'),
             'separator' => ' :: '
         );
 
-        $this->data['action'] = $this->url->link('payment/humm', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['action'] = $this->url->https('payment/humm');
 
-        $this->data['cancel'] = $this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL');
+        $this->data['cancel'] = $this->url->https('extension/payment');
 
         if (isset($this->request->post['humm_merchantNo'])) {
             $this->data['humm_merchantNo'] = $this->request->post['humm_merchantNo'];
@@ -207,9 +204,10 @@ class ControllerPaymentHumm extends Controller
         $this->template = 'payment/humm.tpl';
         $this->children = array(
             'common/header',
-            'common/footer',
+            'common/footer'
         );
-        $this->response->setOutput($this->render());
+
+        $this->response->setOutput($this->render(TRUE), $this->config->get('config_compression'));
     }
 
     /**

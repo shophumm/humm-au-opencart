@@ -5,7 +5,6 @@
     <?php foreach ($params as $key => $value) { ?>
     <input type="hidden" name="<?php echo $key; ?>" value="<?php echo $value; ?>">
     <?php } ?>
-
     <div class="buttons">
         <div class="pull-right">
             <input type="submit" value="<?php echo $button_confirm; ?>" id="button-confirm" class="btn btn-primary"
@@ -13,7 +12,4 @@
         </div>
     </div>
 </form>
-<script>
-    $('#button-confirm').button('reset');
-</script>
 <?php endif; ?>

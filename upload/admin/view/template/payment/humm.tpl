@@ -1,5 +1,6 @@
+
 <?php echo $header; ?>
-<div id="content">
+<div>
     <div class="breadcrumb">
         <?php foreach ($breadcrumbs as $breadcrumb) { ?>
         <?php echo $breadcrumb['separator']; ?><a
@@ -10,16 +11,10 @@
     <div class="warning"><?php echo $error_warning; ?></div>
     <?php } ?>
     <div class="box">
-
         <div class="heading">
-            <h1><img src="view/image/payment.png" alt=""/> <?php echo $heading_title; ?></h1>
-            <div class="buttons"><a onclick="$('#form').submit();"
-                                    class="button"><span><?php echo $button_save; ?></span></a><a
-                        onclick="location = '<?php echo $cancel; ?>';"
-                        class="button"><span><?php echo $button_cancel; ?></span></a></div>
+            <div class="buttons"><a onclick="$('#form').submit();" class="button"><span class="button_left button_save"></span><span class="button_middle"><?php echo $button_save; ?></span><span class="button_right"></span></a><a onclick="location='<?php echo $cancel; ?>';" class="button"><span class="button_left button_cancel"></span><span class="button_middle"><?php echo $button_cancel; ?></span><span class="button_right"></span></a></div>
         </div>
-        <div class="content">
-            <div class="container-fluid">
+              <div class="container-fluid">
                 <div class="humm-header">
                     <div class="humm-payment-logo"></div>
                     <div class="humm-payment-byline">Little things. Big things. Interest freeee!<br/>Humm Payment</div>
@@ -33,14 +28,13 @@
 
                 <div id="humm_simplepath_back">
                     <p>If you don't have a humm merchant account you may join <a
-                                href="https://www.shophumm.com/au/sell-with-humm/"
+                                href="https://www.shophumm.com.au/sell-with-humm"
                                 target="_blank"><span>here</span></a></p>
                 </div>
             </div>
             <hr/>
             <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
                 <table class="form">
-
                     <tr>
                         <td><?php echo $entry_title; ?></td>
                         <td><select name="humm_title">
@@ -198,7 +192,6 @@
                     </tr>
                 </table>
             </form>
-        </div>
     </div>
 </div>
 <?php echo $footer; ?>
