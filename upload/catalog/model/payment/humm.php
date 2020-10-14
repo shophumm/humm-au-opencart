@@ -128,7 +128,6 @@ class ModelPaymentHumm extends Model
             'x_customer_shipping_first_name' => $order_info['shipping_firstname'],
             'x_customer_shipping_last_name' => $order_info['shipping_lastname'],
             'x_customer_shipping_address1' => $order_info['shipping_address_1'],
-//          'x_customer_shipping_address2' => '',
             'x_customer_shipping_address2' => $order_info['shipping_address_2'],
             'x_customer_shipping_city' => $order_info['shipping_city'],
             'x_customer_shipping_state' => '',
@@ -195,17 +194,14 @@ class ModelPaymentHumm extends Model
      */
     public function getGatewayUrl()
     {
-        $environment = $this->config->get('humm_gateway_environment');
-        if ($environment == 'other') {
-            return $this->config->get('humm_gateway_url');
+        if (preg_match('@^https://@', $this->config->get('humm_gateway_environment')) == 1) {
+            return $this->config->get('humm_gateway_environment');
         }
-        if (preg_match('@^https://@', $this->config->get('humm_gateway_url')) !== 1)
-        {
-            return $this->config->get('humm_gateway_url');
-        }
-        $region = $this->config->get('humm_region');
+        $environment = $this->config->get('humm_test');
+
+        $region = $this->config->get('humm_title');
         $country_domain = ($region == 'NZ') ? 'co.nz' : 'com.au';
-        $title = $this->config->get('humm_title');
+
         $domainsTest = array(
             'AU' => 'integration-cart.shophumm.',
             'NZ' => 'securesandbox.oxipay.'
@@ -214,7 +210,7 @@ class ModelPaymentHumm extends Model
             'AU' => 'cart.shophumm.',
             'NZ' => 'secure.oxipay.'
         );
-        return 'https://' . ($environment == 'live' ? $domains[$title] : $domainsTest[$title]) . $country_domain . '/Checkout?platform=Default';
+        return 'https://' . ($environment == 'live' ? $domains[$region] : $domainsTest[$region]) . $country_domain . '/Checkout?platform=Default';
     }
 
     /**

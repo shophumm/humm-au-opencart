@@ -233,13 +233,6 @@ class ControllerPaymentHumm extends Controller
             }
         }
 
-        if (
-            $this->request->post['humm_gateway_environment'] == 'other'
-            && preg_match('@^https://@', $this->request->post['humm_gateway_url']) !== 1
-        ) {
-            $this->error['humm_gateway_url'] = $this->language->get('error_gateway_url_format');
-        }
-
         return !$this->error;
     }
 

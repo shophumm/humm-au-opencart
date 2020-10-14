@@ -85,7 +85,7 @@ class ControllerPaymentHumm extends Controller
     {
         if (static::IS_DEBUG) {
             if ($type == 'data') {
-                $this->log->write('Humm-Data:' . $type . 'Debug' . var_export($data, true));
+                $this->log->write('Humm-Data-update:' . $type . 'Debug' . var_export($data, true));
             } else {
                 $str = var_export([
                     'get' => $_GET,
@@ -169,8 +169,6 @@ class ControllerPaymentHumm extends Controller
         }
 
         $this->debugLogIncoming('data', $order_info);
-        $this->debugLogIncoming('data', $order_status_id);
-
         $comment = '';
         $comment .= 'Test: ' . $request['x_test'] . "\n";
         $comment .= 'Timestamp: ' . $request['x_timestamp'] . "\n";
