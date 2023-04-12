@@ -28,19 +28,18 @@ class ControllerExtensionPaymentHumm extends Controller
     public function index()
     {
         if ($this->cart->getTotal() >= static::HUMM_MINIMUM_PURCHASE) {
-            $data['button_confirm'] = "Continue to Humm";
+            $data['button_confirm'] = 'Continue to Humm';
 
             $data['text_loading'] = $this->language->get('text_loading');
 
             $data['params'] = $this->model_extension_payment_humm->getParams();
 
             $data['action'] = $this->model_extension_payment_humm->getGatewayUrl();
-
         } else {
-          $data['error'] = sprintf($this->language->get('error_amount'), $this->currency->format(static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1));
+            $data['error'] = sprintf($this->language->get('error_amount'), $this->currency->format(static::HUMM_MINIMUM_PURCHASE, $this->session->data['currency'], 1));
         }
-        ModelExtensionPaymentHumm::updateLog("Start Transaction...");
-        ModelExtensionPaymentHumm::updateLog($data,true);
+        ModelExtensionPaymentHumm::updateLog('Start Transaction...');
+        ModelExtensionPaymentHumm::updateLog($data, true);
         return $this->load->view('extension/payment/humm', $data);
     }
 
@@ -51,12 +50,12 @@ class ControllerExtensionPaymentHumm extends Controller
     {
 
         // Validate Response
-        $this->debugLogIncoming($_SERVER["REQUEST_URI"]);
+        $this->debugLogIncoming($_SERVER['REQUEST_URI']);
         try {
             $order_info = $this->getOrderAndVerifyResponse($this->request->post);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Handle callback error
-            $reference_id = "";
+            $reference_id = '';
             if (isset($this->request->post['x_reference'])) {
                 $reference_id = $this->request->post['x_reference'];
             }
@@ -66,6 +65,9 @@ class ControllerExtensionPaymentHumm extends Controller
 
 
         $result = $this->updateOrder($order_info, $this->request->post);
+        if (!$result) {
+            $result = 'Declined';
+        }
 
         $this->response->addHeader('Content-type: application/json');
         $this->response->setOutput(json_encode([
@@ -79,10 +81,10 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     public function complete()
     {
-        $this->debugLogIncoming($_SERVER["REQUEST_URI"]);
+        $this->debugLogIncoming($_SERVER['REQUEST_URI']);
         try {
             $order_info = $this->getOrderAndVerifyResponse($this->request->get);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->session->data['error'] = $this->language->get('text_transaction_verification');
 
             $this->response->redirect($this->url->link('checkout/checkout', '', true));
@@ -95,13 +97,12 @@ class ControllerExtensionPaymentHumm extends Controller
 
         if ($this->request->get['x_result'] == 'failed') {
             $this->session->data['error'] = $this->language->get('text_transaction_failed');
-            ModelExtensionPaymentHumm::updateLog("End failed transaction..");
+            ModelExtensionPaymentHumm::updateLog('End failed transaction..');
 
             $this->response->redirect($this->url->link('checkout/checkout', '', true));
         }
-        ModelExtensionPaymentHumm::updateLog("End Successful transaction..");
+        ModelExtensionPaymentHumm::updateLog('End Successful transaction..');
         $this->response->redirect($this->url->link('checkout/success', '', true));
-
     }
 
     /**
@@ -109,11 +110,10 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     public function cancel()
     {
-        $this->debugLogIncoming($_SERVER["REQUEST_URI"]);
-        ModelExtensionPaymentHumm::updateLog("End cancel transaction..");
+        $this->debugLogIncoming($_SERVER['REQUEST_URI']);
+        ModelExtensionPaymentHumm::updateLog('End cancel transaction..');
         $this->session->data['error'] = $this->language->get('text_transaction_cancelled');
         $this->response->redirect($this->url->link('checkout/checkout', '', true));
-
     }
 
     /**
@@ -134,13 +134,14 @@ class ControllerExtensionPaymentHumm extends Controller
         $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 400 Bad Request');
 
         $this->response->addHeader('Content-type: application/json');
-        $this->response->setOutput(json_encode(["reference_id" => $reference_id, "status" => $comment]));
+        $this->response->setOutput(json_encode(['reference_id' => $reference_id, 'status' => 'Declined']));
     }
 
     /**
      * @param mixed[] $request
      *
      * @return mixed
+     * @throws Exception
      */
     private function getOrderAndVerifyResponse($request)
     {
@@ -154,7 +155,7 @@ class ControllerExtensionPaymentHumm extends Controller
             'x_timestamp',
             'x_result',
         ];
-        ModelExtensionPaymentHumm::updateLog($request,true);
+        ModelExtensionPaymentHumm::updateLog($request, true);
 
         // Required
         foreach ($required as $key => $value) {
@@ -164,19 +165,19 @@ class ControllerExtensionPaymentHumm extends Controller
         }
 
         if (!empty($required)) {
-            throw new \Exception('Bad Request. Missing required fields: ' . implode(', ', $required) . '.');
+            throw new Exception('Bad Request. Missing required fields: ' . implode(', ', $required) . '.');
         }
 
         // Validate Signature
         if (!$this->model_extension_payment_humm->validateSignature($request)) {
-            throw new \Exception('Bad Request. Unable to validate signature.');
+            throw new Exception('Bad Request. Unable to validate signature.');
         }
 
         $order_info = $this->model_checkout_order->getOrder($request['x_reference']);
 
         // Order Exists
         if (empty($order_info)) {
-            throw new \Exception('Bad Request. Invalid Order ID.');
+            throw new Exception('Bad Request. Invalid Order ID.');
         }
 
         return $order_info;
@@ -188,9 +189,19 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     private function updateOrder($order_info, $request)
     {
+        $reResult = $request['x_result'];
         $order_status_id = $this->model_extension_payment_humm->getStatus($request['x_result']);
 
-        ModelExtensionPaymentHumm::updateLog(sprintf("Status for update web %s  api %s",$order_info['order_status_id'],$request['x_result']),true);
+        ModelExtensionPaymentHumm::updateLog(sprintf('Status for update web %s  api %s', $order_info['order_status_id'], $request['x_result']), true);
+
+        if ($this->model_extension_payment_humm->getStatus('store_completed') == $order_info['order_status_id']) {
+            return;
+        }
+
+        if ($this->model_extension_payment_humm->getStatus('store_failed') == $order_info['order_status_id']) {
+            return;
+        }
+
         if ($order_status_id == $order_info['order_status_id']) {
             return;
         }
@@ -203,10 +214,17 @@ class ControllerExtensionPaymentHumm extends Controller
         $comment .= 'Amount: ' . $request['x_amount'] . "\n";
         $comment .= 'Currency: ' . $request['x_currency'] . "\n";
         $comment = strip_tags($comment);
-        ModelExtensionPaymentHumm::updateLog(sprintf("%s %s","update Order\n\r",$comment),true);
+        ModelExtensionPaymentHumm::updateLog(sprintf('%s %s', "update Order\n\r", $comment), true);
+
+        if ($reResult == 'completed') {
+            $reResult = 'Approved';
+        }
+        if ($reResult == 'failed') {
+            $reResult = 'Declined';
+        }
 
         $this->model_checkout_order->addOrderHistory($order_info['order_id'], $order_status_id, $comment, false);
-        return $request['x_result'];
+        return $reResult;
     }
 
     /**
@@ -214,11 +232,10 @@ class ControllerExtensionPaymentHumm extends Controller
      */
     private function debugLogIncoming($type)
     {
-            $str = var_export([
-                'get' => $_GET,
-                'post' => $_POST,
-            ], true);
-            ModelExtensionPaymentHumm::updateLog('Humm ' . $type . ' Start Debug: ' . $str,true);
-
+        $str = var_export([
+            'get' => $_GET,
+            'post' => $_POST,
+        ], true);
+        ModelExtensionPaymentHumm::updateLog('Humm ' . $type . ' Start Debug: ' . $str, true);
     }
 }

@@ -15,7 +15,7 @@ $_['text_heading_general']         = 'General Settings';
 
 $_['text_description_display']     = '';
 $_['text_description_shop']        = 'Enter the shop details for your site.';
-$_['text_description_gateway']     = 'Enter the gateway settings that were supplied to you by humm/Oxipay.';
+$_['text_description_gateway']     = 'Enter the gateway settings that were supplied to you by humm.';
 
 // Help
 $_['help_title']                   = '';
@@ -34,9 +34,11 @@ $_['entry_gateway_environment']    = 'Environment';
 $_['entry_gateway_url']            = 'Gateway URL';
 $_['entry_merchant_id']            = 'Merchant ID';
 $_['entry_api_key']                = 'API Key';
-$_['entry_order_status_completed'] = 'Order Status Completed';
-$_['entry_order_status_pending']   = 'Order Status Pending';
-$_['entry_order_status_failed']    = 'Order Status Failed';
+$_['entry_order_status_completed'] = 'Humm Order Status Completed';
+$_['entry_order_status_store_completed'] = 'Store Order Status Completed';
+$_['entry_order_status_pending']   = 'Humm Order Status Pending';
+$_['entry_order_status_failed']    = 'Humm Store Order Status Failed';
+$_['entry_order_status_store_failed']    = 'Store Order Status Failed';
 $_['entry_geo_zone']               = 'Geo Zone';
 $_['entry_status']                 = 'Status';
 $_['entry_sort_order']             = 'Sort Order';

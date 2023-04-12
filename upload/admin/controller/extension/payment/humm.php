@@ -89,6 +89,8 @@ class ControllerExtensionPaymentHumm extends Controller
             'payment_humm_merchant_id',
             'payment_humm_api_key',
             'payment_humm_order_status_completed_id',
+            'payment_humm_order_status_completed_store_id',
+            'payment_humm_order_status_failed_store_id',
             'payment_humm_order_status_pending_id',
             'payment_humm_order_status_failed_id',
             'payment_humm_geo_zone_id',
@@ -101,8 +103,11 @@ class ControllerExtensionPaymentHumm extends Controller
         $defaults = [
             'payment_humm_title' => 'Humm',
             'payment_humm_order_status_completed_id' => 5,
+            'payment_humm_order_status_completed_store_id' =>5,
+            'payment_humm_order_status_failed_store_id' =>10,
             'payment_humm_order_status_pending_id' => 1,
             'payment_humm_order_status_failed_id' => 10,
+            'payment_humm_'=>10,
         ];
 
         foreach ($keys as $key) {
@@ -121,6 +126,7 @@ class ControllerExtensionPaymentHumm extends Controller
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+
 
         // Render Output
         $this->response->setOutput($this->load->view('extension/payment/humm', $data));
