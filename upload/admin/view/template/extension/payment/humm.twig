@@ -3,57 +3,70 @@
     <div class="page-header">
         <div class="container-fluid">
             <div class="pull-right">
-                <button type="submit" form="form-humm" data-toggle="tooltip" title="{{ button_save }}"
+                <button type="submit"
+                        form="form-humm"
+                        data-toggle="tooltip"
+                        title="{{ button_save }}"
                         class="btn btn-primary">
                     <i class="fa fa-save"></i>
                 </button>
-                <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default">
+                <a href="{{ cancel }}"
+                   data-toggle="tooltip"
+                   title="{{ button_cancel }}"
+                   class="btn btn-default">
                     <i class="fa fa-reply"></i>
                 </a>
             </div>
             <h1>{{ heading_title }}</h1>
             <ul class="breadcrumb">
                 {% for breadcrumb in breadcrumbs %}
-                    <li>
-                        <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
-                    </li>
+                <li>
+                    <a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a>
+                </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
     <div class="container-fluid">
-    <div class="humm-header">
-        <div class="humm-payment-logo"></div>
-        <div class="humm-payment-byline">Little things. Big things. Interest freeee!<br/>Humm Payment</div>
-    </div>
-    <div id="humm_simplepath">
-        <div id="simplepath_unsupported">
-            <p><a href="https://docs.shophumm.com.au/ecommerce/opencart/" target="_blank"> Humm AU OpenCart
-                    Documentation </a></p>
+        <div class="humm-header">
+            <div class="humm-payment-logo"></div>
+            <div class="humm-payment-byline">Little things. Big things. Interest freeee!<br />Humm Payment</div>
         </div>
-    </div>
+        <div id="humm_simplepath">
+            <div id="simplepath_unsupported">
+                <p><a href="https://docs.shophumm.com.au/ecommerce/opencart.html"
+                       target="_blank"> Humm AU OpenCart
+                        Documentation </a></p>
+            </div>
+        </div>
 
-    <div id="humm_simplepath_back">
-        <p>If you don't have a humm merchant account you may join <a href="https://www.shophumm.com.au/sell-with-humm"
-                                                                     target="_blank"><span>here</span></a></p>
-    </div>
+        <div id="humm_simplepath_back">
+            <p>If you don't have a humm merchant account you may join <a href="https://www.shophumm.com.au/sell-with-humm"
+                   target="_blank"><span>here</span></a></p>
+        </div>
 
     </div>
     <div class="container-fluid">
         {% if error_humm_warning %}
-            <div class="alert alert-danger">
-                <i class="fa fa-exclamation-circle"></i> {{ error_humm_warning }}
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-            </div>
+        <div class="alert alert-danger">
+            <i class="fa fa-exclamation-circle"></i> {{ error_humm_warning }}
+            <button type="button"
+                    class="close"
+                    data-dismiss="alert">&times;</button>
+        </div>
         {% endif %}
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">
-                    <i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+                    <i class="fa fa-pencil"></i> {{ text_edit }}
+                </h3>
             </div>
             <div class="panel-body">
 
-                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-humm"
+                <form action="{{ action }}"
+                      method="post"
+                      enctype="multipart/form-data"
+                      id="form-humm"
                       class="form-horizontal">
                     <fieldset>
                         <legend>{{ text_heading_display }}</legend>
@@ -61,12 +74,20 @@
 
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-title">
+                            <label class="col-sm-2 control-label"
+                                   for="input-title">
                                 {{ entry_title }}
                             </label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_title" id="input-title" class="form-control">
-                                    <option value="Humm" {{ payment_humm_title =='Humm' ? ' selected' : '' }}>Humm
+                                <select name="payment_humm_title"
+                                        id="input-title"
+                                        class="form-control">
+                                    <option value="Humm"
+                                            {{
+                                            payment_humm_title=='Humm'
+                                            ? ' selected'
+                                            : ''
+                                            }}>Humm
                                     </option>
                                 </select>
                             </div>
@@ -78,26 +99,39 @@
                         <p>{{ text_description_shop }}</p>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-shop-name">
-                                <span data-toggle="tooltip" title="{{ help_shop_name }}">{{ entry_shop_name }}</span>
+                            <label class="col-sm-2 control-label"
+                                   for="input-shop-name">
+                                <span data-toggle="tooltip"
+                                      title="{{ help_shop_name }}">{{ entry_shop_name }}</span>
                             </label>
                             <div class="col-sm-10">
-                                <input type="text" name="payment_humm_shop_name" value="{{ payment_humm_shop_name }}"
-                                       placeholder="{{ entry_shop_name }}" id="input-shop-name"
-                                       class="form-control"/>
+                                <input type="text"
+                                       name="payment_humm_shop_name"
+                                       value="{{ payment_humm_shop_name }}"
+                                       placeholder="{{ entry_shop_name }}"
+                                       id="input-shop-name"
+                                       class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-region">{{ entry_region }}</label>
+                            <label class="col-sm-2 control-label"
+                                   for="input-region">{{ entry_region }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_region" id="input-region" class="form-control">
+                                <select name="payment_humm_region"
+                                        id="input-region"
+                                        class="form-control">
                                     <option value="">{{ text_select }}</option>
                                     {% for region in regions %}
-                                        <option value="{{ region.code }}" {{ region.code == payment_humm_region ? ' selected' : '' }}>{{ region.name }}</option>
+                                    <option value="{{ region.code }}"
+                                            {{
+                                            region.code==payment_humm_region
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ region.name }}</option>
                                     {% endfor %}
                                 </select>
                                 {% if error_humm_region %}
-                                    <div class="text-danger">{{ error_humm_region }}</div>
+                                <div class="text-danger">{{ error_humm_region }}</div>
                                 {% endif %}
                             </div>
                         </div>
@@ -111,51 +145,71 @@
                             <label class="col-sm-2 control-label"
                                    for="input-gateway-environment">{{ entry_gateway_environment }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_gateway_environment" id="input-gateway-environment"
+                                <select name="payment_humm_gateway_environment"
+                                        id="input-gateway-environment"
                                         class="form-control">
                                     {% for gateway_environment in gateway_environments %}
-                                        <option value="{{ gateway_environment.code }}" {{ gateway_environment.code == payment_humm_gateway_environment ? ' selected' : '' }}>{{ gateway_environment.name }}</option>
+                                    <option value="{{ gateway_environment.code }}"
+                                            {{
+                                            gateway_environment.code==payment_humm_gateway_environment
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ gateway_environment.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
                         <div class="form-group{{ payment_humm_gateway_environment  !=  'other' ? ' hidden' : '' }}">
-                            <label class="col-sm-2 control-label" for="input-gateway-url">
+                            <label class="col-sm-2 control-label"
+                                   for="input-gateway-url">
                                 <span data-toggle="tooltip"
                                       title="{{ help_gateway_url }}">{{ entry_gateway_url }}</span>
                             </label>
                             <div class="col-sm-10">
-                                <input type="text" name="payment_humm_gateway_url"
-                                       value="{{ payment_humm_gateway_url }}" placeholder="{{ entry_gateway_url }}"
-                                       id="input-gateway-url" class="form-control"/>
+                                <input type="text"
+                                       name="payment_humm_gateway_url"
+                                       value="{{ payment_humm_gateway_url }}"
+                                       placeholder="{{ entry_gateway_url }}"
+                                       id="input-gateway-url"
+                                       class="form-control" />
                                 {% if error_humm_gateway_url %}
-                                    <div class="text-danger">{{ error_humm_gateway_url }}</div>
+                                <div class="text-danger">{{ error_humm_gateway_url }}</div>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-merchant-id">
+                            <label class="col-sm-2 control-label"
+                                   for="input-merchant-id">
                                 <span data-toggle="tooltip"
                                       title="{{ help_merchant_id }}">{{ entry_merchant_id }}</span>
                             </label>
                             <div class="col-sm-10">
-                                <input type="text" name="payment_humm_merchant_id"
-                                       value="{{ payment_humm_merchant_id }}" placeholder="{{ entry_merchant_id }}"
-                                       id="input-merchant-id" class="form-control"/>
+                                <input type="text"
+                                       name="payment_humm_merchant_id"
+                                       value="{{ payment_humm_merchant_id }}"
+                                       placeholder="{{ entry_merchant_id }}"
+                                       id="input-merchant-id"
+                                       class="form-control" />
                                 {% if error_humm_merchant_id %}
-                                    <div class="text-danger">{{ error_humm_merchant_id }}</div>
+                                <div class="text-danger">{{ error_humm_merchant_id }}</div>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-api-key">
-                                <span data-toggle="tooltip" title="{{ help_api_key }}">{{ entry_api_key }}</span>
+                            <label class="col-sm-2 control-label"
+                                   for="input-api-key">
+                                <span data-toggle="tooltip"
+                                      title="{{ help_api_key }}">{{ entry_api_key }}</span>
                             </label>
                             <div class="col-sm-10">
-                                <input type="text" name="payment_humm_api_key" value="{{ payment_humm_api_key }}"
-                                       placeholder="{{ entry_api_key }}" id="input-api-key" class="form-control"/>
+                                <input type="text"
+                                       name="payment_humm_api_key"
+                                       value="{{ payment_humm_api_key }}"
+                                       placeholder="{{ entry_api_key }}"
+                                       id="input-api-key"
+                                       class="form-control" />
                                 {% if error_humm_api_key %}
-                                    <div class="text-danger">{{ error_humm_api_key }}</div>
+                                <div class="text-danger">{{ error_humm_api_key }}</div>
                                 {% endif %}
                             </div>
                         </div>
@@ -165,11 +219,25 @@
                         <legend>{{ text_heading_general }}</legend>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+                            <label class="col-sm-2 control-label"
+                                   for="input-status">{{ entry_status }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_status" id="input-status" class="form-control">
-                                    <option value="1" {{ payment_humm_status ? ' selected' : '' }}>{{ text_enabled }}</option>
-                                    <option value="0" {{ not payment_humm_status ? ' selected' : '' }}>{{ text_disabled }}</option>
+                                <select name="payment_humm_status"
+                                        id="input-status"
+                                        class="form-control">
+                                    <option value="1"
+                                            {{
+                                            payment_humm_status
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ text_enabled }}</option>
+                                    <option value="0"
+                                            {{
+                                            not
+                                            payment_humm_status
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ text_disabled }}</option>
                                 </select>
                             </div>
                         </div>
@@ -177,10 +245,16 @@
                             <label class="col-sm-2 control-label"
                                    for="input-store-order-status-completed">{{ entry_order_status_store_completed }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_order_status_completed_store_id" id="input-store-order-status-completed"
+                                <select name="payment_humm_order_status_completed_store_id"
+                                        id="input-store-order-status-completed"
                                         class="form-control">
                                     {% for order_status in order_statuses %}
-                                        <option value="{{ order_status.order_status_id }}" {{ order_status.order_status_id == payment_humm_order_status_completed_store_id ? ' selected' : '' }}>{{ order_status.name }}</option>
+                                    <option value="{{ order_status.order_status_id }}"
+                                            {{
+                                            order_status.order_status_id==payment_humm_order_status_completed_store_id
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ order_status.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -190,25 +264,40 @@
                             <label class="col-sm-2 control-label"
                                    for="input-store-order-status-failed-id">{{ entry_order_status_store_failed }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_order_status_failed_store_id" id="input-store-order-status-failed-id"
+                                <select name="payment_humm_order_status_failed_store_id"
+                                        id="input-store-order-status-failed-id"
                                         class="form-control">
                                     {% for order_status in order_statuses %}
-                                        <option value="{{ order_status.order_status_id }}" {{ order_status.order_status_id == payment_humm_order_status_failed_store_id ? ' selected' : '' }}>{{ order_status.name }}</option>
+                                    <option value="{{ order_status.order_status_id }}"
+                                            {{
+                                            order_status.order_status_id==payment_humm_order_status_failed_store_id
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ order_status.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
-                        {#<h6><strongn> Humm Order Status</strongn></h6>#}
-                        <hr/><hr/>
+                        {#<h6>
+                            <strongn> Humm Order Status</strongn>
+                        </h6>#}
+                        <hr />
+                        <hr />
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label"
                                    for="input-order-status-completed">{{ entry_order_status_completed }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_order_status_completed_id" id="input-order-status-completed"
+                                <select name="payment_humm_order_status_completed_id"
+                                        id="input-order-status-completed"
                                         class="form-control">
                                     {% for order_status in order_statuses %}
-                                        <option value="{{ order_status.order_status_id }}" {{ order_status.order_status_id == payment_humm_order_status_completed_id ? ' selected' : '' }}>{{ order_status.name }}</option>
+                                    <option value="{{ order_status.order_status_id }}"
+                                            {{
+                                            order_status.order_status_id==payment_humm_order_status_completed_id
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ order_status.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -220,10 +309,16 @@
                             <label class="col-sm-2 control-label"
                                    for="input-order-status-pending">{{ entry_order_status_pending }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_order_status_pending_id" id="input-order-status-pending"
+                                <select name="payment_humm_order_status_pending_id"
+                                        id="input-order-status-pending"
                                         class="form-control">
                                     {% for order_status in order_statuses %}
-                                        <option value="{{ order_status.order_status_id }}" {{ order_status.order_status_id == payment_humm_order_status_pending_id ? ' selected' : '' }}>{{ order_status.name }}</option>
+                                    <option value="{{ order_status.order_status_id }}"
+                                            {{
+                                            order_status.order_status_id==payment_humm_order_status_pending_id
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ order_status.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -232,42 +327,84 @@
                             <label class="col-sm-2 control-label"
                                    for="input-order-status-failed">{{ entry_order_status_failed }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_order_status_failed_id" id="input-order-status-failed"
+                                <select name="payment_humm_order_status_failed_id"
+                                        id="input-order-status-failed"
                                         class="form-control">
                                     {% for order_status in order_statuses %}
-                                        <option value="{{ order_status.order_status_id }}" {{ order_status.order_status_id == payment_humm_order_status_failed_id ? ' selected' : '' }}>{{ order_status.name }}</option>
+                                    <option value="{{ order_status.order_status_id }}"
+                                            {{
+                                            order_status.order_status_id==payment_humm_order_status_failed_id
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ order_status.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-force-humm">{{ entry_force_humm }}</label>
+                            <label class="col-sm-2 control-label"
+                                   for="input-force-humm">{{ entry_force_humm }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_force" id="input-force-humm" class="form-control">
-                                    <option value="1" {{   payment_humm_force ? ' selected' : '' }}>{{ text_enabled }}</option>
-                                    <option value="0" {{ not payment_humm_force  ? ' selected' : '' }}>{{ text_disabled }}</option>
+                                <select name="payment_humm_force"
+                                        id="input-force-humm"
+                                        class="form-control">
+                                    <option value="1"
+                                            {{
+                                            payment_humm_force
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ text_enabled }}</option>
+                                    <option value="0"
+                                            {{
+                                            not
+                                            payment_humm_force
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ text_disabled }}</option>
                                 </select>
                             </div>
                         </div>
 
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-humm_log">{{ entry_humm_log }}</label>
+                            <label class="col-sm-2 control-label"
+                                   for="input-humm_log">{{ entry_humm_log }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_log" id="input-humm_log" class="form-control">
-                                    <option value="1" {{   payment_humm_log ? ' selected' : '' }}>{{ text_enabled }}</option>
-                                    <option value="0" {{ not payment_humm_log  ? ' selected' : '' }}>{{ text_disabled }}</option>
+                                <select name="payment_humm_log"
+                                        id="input-humm_log"
+                                        class="form-control">
+                                    <option value="1"
+                                            {{
+                                            payment_humm_log
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ text_enabled }}</option>
+                                    <option value="0"
+                                            {{
+                                            not
+                                            payment_humm_log
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ text_disabled }}</option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-geo-zone">{{ entry_geo_zone }}</label>
+                            <label class="col-sm-2 control-label"
+                                   for="input-geo-zone">{{ entry_geo_zone }}</label>
                             <div class="col-sm-10">
-                                <select name="payment_humm_geo_zone_id" id="input-geo-zone" class="form-control">
+                                <select name="payment_humm_geo_zone_id"
+                                        id="input-geo-zone"
+                                        class="form-control">
                                     <option value="0">{{ text_all_zones }}</option>
                                     {% for geo_zone in geo_zones %}
-                                        <option value="{{ geo_zone.geo_zone_id }}" {{ geo_zone.geo_zone_id == payment_humm_geo_zone_id ? ' selected' : '' }}>{{ geo_zone.name }}</option>
+                                    <option value="{{ geo_zone.geo_zone_id }}"
+                                            {{
+                                            geo_zone.geo_zone_id==payment_humm_geo_zone_id
+                                            ? ' selected'
+                                            : ''
+                                            }}>{{ geo_zone.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -277,11 +414,15 @@
 
 
                         <div class="form-group">
-                            <label class="col-sm-2 control-label" for="input-sort-order">{{ entry_sort_order }}</label>
+                            <label class="col-sm-2 control-label"
+                                   for="input-sort-order">{{ entry_sort_order }}</label>
                             <div class="col-sm-10">
-                                <input type="text" name="payment_humm_sort_order" value="{{ humm_sort_order }}"
-                                       placeholder="{{ entry_sort_order }}" id="input-sort-order"
-                                       class="form-control"/>
+                                <input type="text"
+                                       name="payment_humm_sort_order"
+                                       value="{{ humm_sort_order }}"
+                                       placeholder="{{ entry_sort_order }}"
+                                       id="input-sort-order"
+                                       class="form-control" />
                             </div>
                         </div>
                     </fieldset>
