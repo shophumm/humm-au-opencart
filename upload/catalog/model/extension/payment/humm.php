@@ -1,15 +1,15 @@
 <?php
 
 const HUMM_VERSION = 'humm_plugin_version_placeholder';
-const HUMM_DESCRIPTION = "Pay in slices. No interest ever.";
-CONST OXIPAY_DESCRIPTION = 'Pay the easier way';
+const HUMM_DESCRIPTION = 'Pay in slices. No interest ever.';
+const OXIPAY_DESCRIPTION = 'Pay the easier way';
 
 /**
  * Class ModelExtensionPaymentHumm
  */
 class ModelExtensionPaymentHumm extends Model
 {
-    static public $hummlog=null;
+    public static $hummlog=null;
     /**
      * @param mixed[] $address
      * @param double $total
@@ -19,7 +19,7 @@ class ModelExtensionPaymentHumm extends Model
 
     public function getMethod($address, $total)
     {
-        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_humm_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
+        $query = $this->db->query('SELECT * FROM ' . DB_PREFIX . "zone_to_geo_zone WHERE geo_zone_id = '" . (int)$this->config->get('payment_humm_geo_zone_id') . "' AND country_id = '" . (int)$address['country_id'] . "' AND (zone_id = '" . (int)$address['zone_id'] . "' OR zone_id = '0')");
 
         $status = false;
         if (!$this->config->get('payment_humm_geo_zone_id')) {
@@ -92,10 +92,10 @@ class ModelExtensionPaymentHumm extends Model
         $this->load->model('checkout/order');
 
         $order_info = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-        $payment_country_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE country_id = '" . (int)$order_info['payment_country_id'] . "' AND status = 1 LIMIT 1")->row;
-        $payment_zone_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int)$order_info['payment_zone_id'] . "' AND status = 1 AND country_id = '" . (int)$order_info['payment_country_id'] . "' LIMIT 1")->row;
-        $shipping_country_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "country WHERE country_id = '" . (int)$order_info['shipping_country_id'] . "' AND status = 1 LIMIT 1")->row;
-        $shipping_zone_info = $this->db->query("SELECT * FROM " . DB_PREFIX . "zone WHERE zone_id = '" . (int)$order_info['shipping_zone_id'] . "' AND status = 1 AND country_id = '" . (int)$order_info['shipping_country_id'] . "' LIMIT 1")->row;
+        $payment_country_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "country WHERE country_id = '" . (int)$order_info['payment_country_id'] . "' AND status = 1 LIMIT 1")->row;
+        $payment_zone_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "zone WHERE zone_id = '" . (int)$order_info['payment_zone_id'] . "' AND status = 1 AND country_id = '" . (int)$order_info['payment_country_id'] . "' LIMIT 1")->row;
+        $shipping_country_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "country WHERE country_id = '" . (int)$order_info['shipping_country_id'] . "' AND status = 1 LIMIT 1")->row;
+        $shipping_zone_info = $this->db->query('SELECT * FROM ' . DB_PREFIX . "zone WHERE zone_id = '" . (int)$order_info['shipping_zone_id'] . "' AND status = 1 AND country_id = '" . (int)$order_info['shipping_country_id'] . "' LIMIT 1")->row;
 
         $params = [
             // Required
@@ -163,6 +163,8 @@ class ModelExtensionPaymentHumm extends Model
             'completed' => $this->config->get('payment_humm_order_status_completed_id'),
             'pending' => $this->config->get('payment_humm_order_status_pending_id'),
             'failed' => $this->config->get('payment_humm_order_status_failed_id'),
+            'store_failed' => $this->config->get('payment_humm_order_status_failed_store_id'),
+            'store_completed' => $this->config->get('payment_humm_order_status_completed_store_id'),
         ];
     }
 
@@ -221,21 +223,19 @@ class ModelExtensionPaymentHumm extends Model
     /**
      *
      */
-    static public function updateLog($message=null,$line=false)
+    public static function updateLog($message = null, $line = false)
     {
         if (!self::$hummlog) {
-            self::$hummlog = new Log("hummPayment.log");
+            self::$hummlog = new Log('hummPayment.log');
         }
 
-        if (is_string($message) || is_numeric($message))
-        {
+        if (is_string($message) || is_numeric($message)) {
             self::$hummlog->write($message);
-        }
-        else {
+        } else {
             self::$hummlog->write(json_encode($message));
         }
-        if ($line){
-            self::$hummlog->write("=====================================================");
+        if ($line) {
+            self::$hummlog->write('=====================================================');
         }
     }
 }
