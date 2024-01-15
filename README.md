@@ -1,15 +1,10 @@
 # humm-opencart AU
 
-OpenCart integration plugin for using the **humm** payment gateway.
+OpenCart integration plugin for **humm** payment gateway.
 
-Please see https://docs.shophumm.com.au/ecommerce/opencart/ (Australian) 
-or https://docs.shophumm.co.nz/ecommerce/opencart/ 
-(New Zealand) for information on how to use this plugin. 
+Please see https://docs.shophumm.com.au/ecommerce/opencart.html for information on how to install and use this plugin. 
 
+Released version from 3.0+
 
-Specification: https://github.com/shophumm/humm-au-opencart/blob/master/3.0/OpenCartPluginHumm.pdf
-
-release version from version 1.0+ to 3.0+
-
-download release version and install plugins
+*Please be advised that although we have other published releases we no longer provide support for openCart versions lower than **3.0.3.9***
 
