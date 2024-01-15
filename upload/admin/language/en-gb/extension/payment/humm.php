@@ -6,7 +6,7 @@ $_['heading_title']                = 'humm';
 $_['text_extension']               = 'Extensions';
 $_['text_success']                 = 'Success: You have modified humm payment module!';
 $_['text_edit']                    = 'Edit';
-$_['text_humm']                    = '<a href="https://shophumm.com.au" target="_blank"><img src="view/image/payment/humm.png" alt="humm" title="humm" /></a>';
+$_['text_humm']                    = '<a href="https://www.shophumm.com/au/" target="_blank"><img src="view/image/payment/humm.png" alt="humm" title="humm" /></a>';
 
 $_['text_heading_display']         = 'Checkout Method';
 $_['text_heading_shop']            = 'Shop Details';
