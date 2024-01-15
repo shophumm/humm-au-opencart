@@ -130,7 +130,7 @@ class ModelExtensionPaymentHumm extends Model
             'x_customer_shipping_postcode' => $order_info['shipping_postcode'],
             'x_customer_shipping_country' => '',
             'x_description' => 'Order #' . $order_info['order_id'],
-            'version_info' => 'Humm_' . HUMM_VERSION . '_on_OC_' . substr(VERSION, 0, 3),
+            'version_info' => 'humm_' . HUMM_VERSION . '_on_OC_' . substr(VERSION, 0, 3),
         ];
 
         if ($payment_country_info) {
@@ -196,11 +196,11 @@ class ModelExtensionPaymentHumm extends Model
         $country_domain = ($region == 'NZ') ? 'co.nz' : 'com.au';
         $title = $this->config->get('payment_humm_title');
         $domainsTest = array(
-            'Humm' => 'integration-cart.shophumm.',
+            'humm' => 'integration-cart.shophumm.',
             'Oxipay' => 'securesandbox.oxipay.'
         );
         $domains = array(
-            'Humm' => 'cart.shophumm.',
+            'humm' => 'cart.shophumm.',
             'Oxipay' => 'secure.oxipay.'
         );
 
