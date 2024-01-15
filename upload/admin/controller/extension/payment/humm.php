@@ -99,7 +99,7 @@ class ControllerExtensionPaymentHumm extends Controller
         ];
 
         $defaults = [
-            'payment_humm_title' => 'Humm',
+            'payment_humm_title' => 'humm',
             'payment_humm_order_status_completed_id' => 5,
             'payment_humm_order_status_pending_id' => 1,
             'payment_humm_order_status_failed_id' => 10,
@@ -167,10 +167,10 @@ class ControllerExtensionPaymentHumm extends Controller
                 'code' => 'AU',
                 'name' => 'Australia',
             ],
-            [
-                'code' => 'NZ',
-                'name' => 'New Zealand',
-            ],
+            // [
+            //     'code' => 'NZ',
+            //     'name' => 'New Zealand',
+            // ],
         ];
     }
 

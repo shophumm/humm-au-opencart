@@ -2,7 +2,7 @@
 
 const HUMM_VERSION = 'humm_plugin_version_placeholder';
 const HUMM_DESCRIPTION = "Pay in slices. No interest ever.";
-CONST OXIPAY_DESCRIPTION = 'Pay the easier way';
+//CONST OXIPAY_DESCRIPTION = 'Pay the easier way';
 
 /**
  * Class ModelExtensionPaymentHumm
@@ -83,7 +83,7 @@ class ModelExtensionPaymentHumm extends Model
     }
 
     /**
-     * Generate array of parameters to be passed onto humm/Oxipay.
+     * Generate array of parameters to be passed onto humm.
      *
      * @return mixed[]
      */
@@ -197,11 +197,11 @@ class ModelExtensionPaymentHumm extends Model
         $title = $this->config->get('payment_humm_title');
         $domainsTest = array(
             'humm' => 'integration-cart.shophumm.',
-            'Oxipay' => 'securesandbox.oxipay.'
+            //'Oxipay' => 'securesandbox.oxipay.'
         );
         $domains = array(
             'humm' => 'cart.shophumm.',
-            'Oxipay' => 'secure.oxipay.'
+            //'Oxipay' => 'secure.oxipay.'
         );
 
         return 'https://' . ($environment == 'live' ? $domains[$title] : $domainsTest[$title]) . $country_domain . '/Checkout?platform=Default';
@@ -213,7 +213,7 @@ class ModelExtensionPaymentHumm extends Model
     public function getDescription()
     {
         $title = $this->config->get('payment_humm_title');
-        $description = $title == 'Humm' ? HUMM_DESCRIPTION : OXIPAY_DESCRIPTION;
+        $description = $title == 'humm' . HUMM_DESCRIPTION;
 
         return $description;
     }
