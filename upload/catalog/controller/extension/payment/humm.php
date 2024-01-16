@@ -6,7 +6,7 @@
 class ControllerExtensionPaymentHumm extends Controller
 {
     const IS_DEBUG = false;
-    const HUMM_MINIMUM_PURCHASE = 20;
+    const HUMM_MINIMUM_PURCHASE = 80;
     public $log;
 
     /**
