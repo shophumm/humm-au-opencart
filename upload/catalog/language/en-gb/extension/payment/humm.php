@@ -8,4 +8,4 @@ $_['text_transaction_verification'] = 'Your payment with humm  had an error, ple
 $_['button_confirm']                = 'Proceed to humm ';
 
 // Error
-$_['error_amount']                  = 'Orders under %s are not supported humm. Please select a different payment option.';
+$_['error_amount']                  = 'Orders under %s are not supported by humm. Please select a different payment option.';
