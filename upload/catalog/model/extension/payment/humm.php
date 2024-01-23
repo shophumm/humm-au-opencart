@@ -197,11 +197,11 @@ class ModelExtensionPaymentHumm extends Model
         $title = $this->config->get('payment_humm_title');
         $domainsTest = array(
             'humm' => 'integration-cart.shophumm.',
-            //'Oxipay' => 'securesandbox.oxipay.'
+            //'Oxipay' => 'securesandbox.oxipay.' //Commented out for now as we no longer are Oxipay
         );
         $domains = array(
             'humm' => 'cart.shophumm.',
-            //'Oxipay' => 'secure.oxipay.'
+            //'Oxipay' => 'secure.oxipay.'  //Commented out for now as we no longer are Oxipay
         );
 
         return 'https://' . ($environment == 'live' ? $domains[$title] : $domainsTest[$title]) . $country_domain . '/Checkout?platform=Default';

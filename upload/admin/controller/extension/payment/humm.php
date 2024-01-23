@@ -167,7 +167,7 @@ class ControllerExtensionPaymentHumm extends Controller
                 'code' => 'AU',
                 'name' => 'Australia',
             ],
-            // [
+            // [  //Commented as we only offer humm in AU (for now)
             //     'code' => 'NZ',
             //     'name' => 'New Zealand',
             // ],
@@ -185,13 +185,13 @@ class ControllerExtensionPaymentHumm extends Controller
                 'name' => 'Sandbox',
             ],
             [
-                'code' => 'live',
-                'name' => 'Live',
+                'code' => 'live', //TODO We need to check if this value is used in the business logic of the APIs
+                'name' => 'AU-Production',
             ],
-            [
-                'code' => 'other',
-                'name' => 'Other',
-            ],
+            // [
+            //     'code' => 'other',
+            //     'name' => 'Other',
+            // ],
         ];
     }
 }
