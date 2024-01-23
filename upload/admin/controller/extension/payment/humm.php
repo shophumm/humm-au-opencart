@@ -138,7 +138,7 @@ class ControllerExtensionPaymentHumm extends Controller
         $keys = [
             'payment_humm_title' => 'Title',
             'payment_humm_region' => 'Region',
-            'payment_humm_merchant_id' => 'Merchant ID',
+            'payment_humm_merchant_id' => 'Merchant Number',
             'payment_humm_api_key' => 'API Key',
         ];
 
