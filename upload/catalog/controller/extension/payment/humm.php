@@ -6,7 +6,7 @@
 class ControllerExtensionPaymentHumm extends Controller
 {
     const IS_DEBUG = false;
-    const HUMM_MINIMUM_PURCHASE = 20;
+    const HUMM_MINIMUM_PURCHASE = 80;
     public $log;
 
     /**
@@ -28,7 +28,7 @@ class ControllerExtensionPaymentHumm extends Controller
     public function index()
     {
         if ($this->cart->getTotal() >= static::HUMM_MINIMUM_PURCHASE) {
-            $data['button_confirm'] = "Continue to Humm";
+            $data['button_confirm'] = "Continue to humm";
 
             $data['text_loading'] = $this->language->get('text_loading');
 
@@ -129,7 +129,7 @@ class ControllerExtensionPaymentHumm extends Controller
             $params[] = $key . '=' . $value;
         }
 
-        ModelExtensionPaymentHumm::updateLog('Humm Error: ' . $comment . ' (' . implode('; ', $params) . ')');
+        ModelExtensionPaymentHumm::updateLog('humm Error: ' . $comment . ' (' . implode('; ', $params) . ')');
 
         $this->response->addHeader($this->request->server['SERVER_PROTOCOL'] . ' 400 Bad Request');
 
@@ -218,7 +218,7 @@ class ControllerExtensionPaymentHumm extends Controller
                 'get' => $_GET,
                 'post' => $_POST,
             ], true);
-            ModelExtensionPaymentHumm::updateLog('Humm ' . $type . ' Start Debug: ' . $str,true);
+            ModelExtensionPaymentHumm::updateLog('humm ' . $type . ' Start Debug: ' . $str,true);
 
     }
 }

@@ -2,7 +2,7 @@
 
 const HUMM_VERSION = 'humm_plugin_version_placeholder';
 const HUMM_DESCRIPTION = "Pay in slices. No interest ever.";
-CONST OXIPAY_DESCRIPTION = 'Pay the easier way';
+//CONST OXIPAY_DESCRIPTION = 'Pay the easier way';
 
 /**
  * Class ModelExtensionPaymentHumm
@@ -83,7 +83,7 @@ class ModelExtensionPaymentHumm extends Model
     }
 
     /**
-     * Generate array of parameters to be passed onto humm/Oxipay.
+     * Generate array of parameters to be passed onto humm.
      *
      * @return mixed[]
      */
@@ -130,7 +130,7 @@ class ModelExtensionPaymentHumm extends Model
             'x_customer_shipping_postcode' => $order_info['shipping_postcode'],
             'x_customer_shipping_country' => '',
             'x_description' => 'Order #' . $order_info['order_id'],
-            'version_info' => 'Humm_' . HUMM_VERSION . '_on_OC_' . substr(VERSION, 0, 3),
+            'version_info' => 'humm_' . HUMM_VERSION . '_on_OC_' . substr(VERSION, 0, 3),
         ];
 
         if ($payment_country_info) {
@@ -196,12 +196,12 @@ class ModelExtensionPaymentHumm extends Model
         $country_domain = ($region == 'NZ') ? 'co.nz' : 'com.au';
         $title = $this->config->get('payment_humm_title');
         $domainsTest = array(
-            'Humm' => 'integration-cart.shophumm.',
-            'Oxipay' => 'securesandbox.oxipay.'
+            'humm' => 'integration-cart.shophumm.',
+            //'Oxipay' => 'securesandbox.oxipay.' //Commented out for now as we no longer are Oxipay
         );
         $domains = array(
-            'Humm' => 'cart.shophumm.',
-            'Oxipay' => 'secure.oxipay.'
+            'humm' => 'cart.shophumm.',
+            //'Oxipay' => 'secure.oxipay.'  //Commented out for now as we no longer are Oxipay
         );
 
         return 'https://' . ($environment == 'live' ? $domains[$title] : $domainsTest[$title]) . $country_domain . '/Checkout?platform=Default';
@@ -213,7 +213,7 @@ class ModelExtensionPaymentHumm extends Model
     public function getDescription()
     {
         $title = $this->config->get('payment_humm_title');
-        $description = $title == 'Humm' ? HUMM_DESCRIPTION : OXIPAY_DESCRIPTION;
+        $description = $title == 'humm' . HUMM_DESCRIPTION;
 
         return $description;
     }

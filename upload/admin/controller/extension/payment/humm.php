@@ -99,7 +99,7 @@ class ControllerExtensionPaymentHumm extends Controller
         ];
 
         $defaults = [
-            'payment_humm_title' => 'Humm',
+            'payment_humm_title' => 'humm',
             'payment_humm_order_status_completed_id' => 5,
             'payment_humm_order_status_pending_id' => 1,
             'payment_humm_order_status_failed_id' => 10,
@@ -138,7 +138,7 @@ class ControllerExtensionPaymentHumm extends Controller
         $keys = [
             'payment_humm_title' => 'Title',
             'payment_humm_region' => 'Region',
-            'payment_humm_merchant_id' => 'Merchant ID',
+            'payment_humm_merchant_id' => 'Merchant Number',
             'payment_humm_api_key' => 'API Key',
         ];
 
@@ -167,10 +167,10 @@ class ControllerExtensionPaymentHumm extends Controller
                 'code' => 'AU',
                 'name' => 'Australia',
             ],
-            [
-                'code' => 'NZ',
-                'name' => 'New Zealand',
-            ],
+            // [  //Commented as we only offer humm in AU (for now)
+            //     'code' => 'NZ',
+            //     'name' => 'New Zealand',
+            // ],
         ];
     }
 
@@ -185,13 +185,13 @@ class ControllerExtensionPaymentHumm extends Controller
                 'name' => 'Sandbox',
             ],
             [
-                'code' => 'live',
-                'name' => 'Live',
+                'code' => 'live', //TODO We need to check if this value is used in the business logic of the APIs
+                'name' => 'AU-Production',
             ],
-            [
-                'code' => 'other',
-                'name' => 'Other',
-            ],
+            // [
+            //     'code' => 'other',
+            //     'name' => 'Other',
+            // ],
         ];
     }
 }
