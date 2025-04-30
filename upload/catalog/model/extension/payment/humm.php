@@ -193,10 +193,10 @@ class ModelExtensionPaymentHumm extends Model
         }
 
         $region = $this->config->get('payment_humm_region');
-        $country_domain = ($region == 'NZ') ? 'co.nz' : 'com.au';
+        $country_domain = ($region == 'NZ') ? 'co.nz' : 'com';
         $title = $this->config->get('payment_humm_title');
         $domainsTest = array(
-            'humm' => 'integration-cart.shophumm.',
+            'humm' => 'cart.dev.anz.humm-global.',
             //'Oxipay' => 'securesandbox.oxipay.' //Commented out for now as we no longer are Oxipay
         );
         $domains = array(
